@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aa-whisper</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- ====================================================== -->
+        <!-- AUTHENTICATION SECTION -->
+        <!-- ====================================================== -->
+        <section class="auth-container" id="auth-container">
+            <div class="auth-form">
+                <div class="app-logo">
+                    <h1>aa-whisper.</h1>
+                    <p>private messaging client.</p>
+                </div>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="account-tab">Account Login</button>
+                    <button class="auth-tab" id="guest-tab">Chat as Guest</button>
+                </div>
+                
+                <!-- Guest Login Form -->
+                <div class="auth-panel" id="guest-panel">
+                    <div class="disabled-overlay">
+                        <h3>Guest Login Disabled</h3>
+                        <p>Please create an account to join the chat.</p>
+                    </div>
+                    <h2>jump in.</h2>
+                    <p>you won't be able to access your private chats again after logging out.</p>
+                    <div class="input-with-button">
+                        <input type="text" id="guest-username" placeholder="display name" maxlength="20">
+                        <button id="guest-login-btn">join</button>
+                    </div>
+                </div>
+                
+                <!-- Account Login Form -->
+                <div class="auth-panel active" id="account-panel">
+                    <h2>welcome back.</h2>
+                    <input type="email" id="email" placeholder="email">
+                    <div class="input-with-button">
+                        <input type="password" id="password" placeholder="password">
+                        <button id="login-btn">login</button>
+                    </div>
+                    <p class="auth-switch">don't have an account? <a href="#" id="show-signup">sign up.</a></p>
+                    <p class="auth-switch">forgot ur password? <a href="#" id="reset-password-btn">reset it.</a></p>
+                </div>
+                
+                <!-- Sign Up Form -->
+                <div class="auth-panel" id="signup-panel">
+                    <h2>welcome.</h2>
+                    <input type="email" id="signup-email" placeholder="Email">
+                    <div class="input-with-button">
+                        <input type="password" id="signup-password" placeholder="Password (must be 6+ characters)">
+                    </div>
+                    <div class="input-with-button">
+                        <input type="text" id="display-name" placeholder="Display Name">
+                        <button id="signup-btn">sign up</button>
+                    </div>
+                    <p class="auth-switch">already have an account? <a href="#" id="show-login">log in.</a></p>
+                </div>
+                
+                <!-- Set Username Form -->
+                <div class="auth-panel" id="username-panel">
+                    <h3>choose your username.</h3>
+                    <p>this is how others will see you in chat.</p>
+                    <input type="text" id="choose-username" placeholder="display name" maxlength="20">
+                    <button id="set-username-btn">continue</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ====================================================== -->
+        <!-- MAIN APP SECTION -->
+        <!-- ====================================================== -->
+        <section class="app-main" id="app-main" style="display: none;">
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
+            
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <!-- User Profile Section -->
+                <div class="user-profile">
+                    <div class="user-avatar" id="user-avatar"></div>
+                    <div class="user-info">
+                        <div class="user-name-container">
+                            <div class="user-name" id="user-name"></div>
+                            <!-- Email Verification Icon -->
+                            <div class="email-verification-icon" id="email-verification-icon" style="display: none;" title="Email verification status">
+                                <span class="verification-icon" id="verification-icon">✓</span>
+                                <div class="verification-tooltip" id="verification-tooltip">
+                                    <div class="tooltip-content">
+                                        <span id="tooltip-status">verified</span>
+                                        <div id="tooltip-email" class="tooltip-email"></div>
+                                        <button id="verify-email-btn" class="tooltip-btn" style="display: none;">verify email</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="auth-actions">
+                            <button id="logout-btn" class="logout-btn">get out</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Public Rooms Section -->
+                <div class="rooms-section collapsible-section" id="rooms-section">
+                    <div class="section-header">
+                        <h3>public chats</h3>
+                        <div class="section-controls">
+                            <div id="add-room-container" style="display: none;">
+                                <button id="open-new-room-modal-btn" class="refresh-btn">+</button>
+                            </div>
+                            <button class="collapse-toggle" data-section="rooms-section">▼</button>
+                        </div>
+                    </div>
+                    <div class="section-content" id="rooms-content">
+                        <div class="room-list" id="room-list">
+                            <div class="room-item active" data-room="general">General</div>
+                            <div class="room-item" data-room="random">Random</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Private Chats Section -->
+                <div class="recent-chats-section collapsible-section" id="recent-chats-section">
+                    <div class="section-header">
+                        <h3>humans</h3>
+                        <div class="section-controls">
+                            <button class="collapse-toggle" data-section="recent-chats-section">▼</button>
+                        </div>
+                    </div>
+                    <div class="section-content" id="recent-chats-content">
+                        <div class="chat-search-results" id="chat-search-results"></div>
+                        <div class="recent-chats-list" id="recent-chats-list"></div>
+                    </div>
+                </div>
+
+                <!-- Admin Controls Section -->
+                <div class="admin-section collapsible-section" id="admin-section" style="display: none;">
+                    <div class="section-header">
+                        <h3>admin controls</h3>
+                        <button class="collapse-toggle" data-section="admin-section">▼</button>
+                    </div>
+                    <div class="section-content" id="admin-content">
+                        <div class="admin-controls">
+                            <!-- User selector -->
+                            <div class="admin-user-select-wrapper">
+								<h4>select user:</h4>
+                                <div class="admin-select-container">
+                                    <select id="admin-user-select">
+                                        <!-- Options will be populated by JavaScript -->
+                                    </select>
+                                    <button id="refresh-admin-users-btn" class="refresh-btn" title="Refresh user list">
+                                        ↻
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-user-info" id="admin-user-info" style="display: none;">
+                                <h4>info</h4>
+                                <div class="user-info-grid">
+                                    <div class="info-item"><span class="info-label">name:</span><span id="info-display-name">-</span></div>
+                                    <div class="info-item"><span class="info-label">type:</span><span id="info-user-type">-</span></div>
+                                    <div class="info-item"><span class="info-label">status:</span><span id="info-status">-</span></div>
+                                    <div class="info-item"><span class="info-label">last seen:</span><span id="info-last-seen">-</span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-form-group">
+                                <label for="admin-reason-input">reason (required for banning):</label>
+                                <textarea id="admin-reason-input" class="admin-textarea" placeholder="reason for action..."></textarea>
+                            </div>
+							
+							<h4>options:</h4>
+                            
+                            <div class="admin-buttons">
+                                <button id="ban-user-btn" class="admin-button ban-button admin-only">ban</button>
+                                <button id="unban-user-btn" class="admin-button unban-button admin-only">unban</button>
+                            </div>
+                            
+                            <div class="leader-buttons">
+                                <button id="grant-admin-btn" class="admin-button grant-button leader-only">grant admin</button>
+                                <button id="revoke-admin-btn" class="admin-button revoke-button leader-only">revoke admin</button>
+                            </div>
+                            
+                            <div id="admin-action-message" class="admin-notification" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar Footer -->
+                <div class="sidebar-footer">
+                    <p>made by <a href="https://sites.google.com/view/aa-infinitech/" target="_blank">aa</a> and adyan using ai</p>
+                    <a href="https://aa-whisper.netlify.app/help" target="_blank">need help?</a>
+                </div>
+            </aside>
+            
+            <!-- Chat Area -->
+            <main class="chat-area">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="header-left">
+                        <h2 id="current-room-name">General</h2>
+                    </div>
+                    <span class="app-branding">aa-whisper.</span>
+                </div>
+                
+                <!-- Banned notification -->
+                <div id="banned-notification" class="banned-notification" style="display: none;">
+                    <div class="banned-content">
+                        <div class="banned-icon">🚫</div>
+                        <div class="banned-message">
+                            <h3>ur banned from messaging, man.</h3>
+                            <p id="ban-reason-text">reason: no reason provided</p>
+                            <p>fix up.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="messages" id="messages">
+                    <div class="messages-loading-container" id="messages-loading-container" style="display: none;">
+                        <div class="loading-spinner-large"></div>
+                    </div>
+                </div>
+                
+				<!-- Message Input -->
+				<div class="message-input" id="message-input-container">
+					<div class="message-input-typing" id="typing-indicator"></div>
+					<div class="input-with-button">
+						<input type="text" id="message-input" placeholder="start typing..." maxlength="200" autofocus>
+						<button id="send-btn">▶️</button>
+					</div>
+				</div>
+            </main>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <div id="new-chat-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>find users</h3>
+                <button class="close-modal" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="search-results" id="search-results"></div>
+        </div>
+    </div>
+    
+    <div id="new-room-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>open a room</h3>
+                <button class="close-modal" id="close-new-room-modal-btn">&times;</button>
+            </div>
+            <input type="text" id="new-room-name-modal" class="search-user-input" placeholder="enter new room name...">
+            <div id="new-room-error-message" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+	
+	<div id="call-modal" class="modal">
+		<div class="modal-content call-modal-content">
+			<!-- This will be populated by JavaScript -->
+		</div>
+	</div>
+
+    <div id="admin-confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirm-title">u sure?</h3>
+                <button class="close-modal" id="confirm-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">u sure u wanna do this?</p>
+                <div id="confirm-details" class="confirm-details"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-cancel-btn" class="btn btn-secondary">cancel</button>
+                <button id="confirm-ok-btn" class="btn btn-danger">confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    
+    <!-- Your app script -->
+    <script src="app.js?v=2"></script>
+    
+    <!-- Custom Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+	
+	<!-- Sound effects -->
+	<audio id="notification-sound" src="sounds/new_message.mp3" preload="auto"></audio>
+
+</body>
+</html>

@@ -65,122 +65,94 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log("%c welcome to whisper! ", 'font-size: 30px; background: linear-gradient(135deg, #1a1a2e, #32264a); border: 1px solid #fff; border-radius: 30px; font-weight: 1000;');
     
-    // DOM elements
-    const authContainer = document.getElementById('auth-container');
-    const appMain = document.getElementById('app-main');
-    const guestTab = document.getElementById('guest-tab');
-    const accountTab = document.getElementById('account-tab');
-    const guestPanel = document.getElementById('guest-panel');
-    const accountPanel = document.getElementById('account-panel');
-    const signupPanel = document.getElementById('signup-panel');
-    const usernamePanel = document.getElementById('username-panel');
-    const guestUsername = document.getElementById('guest-username');
-    const guestLoginBtn = document.getElementById('guest-login-btn');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const loginBtn = document.getElementById('login-btn');
-    const signupEmail = document.getElementById('signup-email');
-    const signupPassword = document.getElementById('signup-password');
-    const displayName = document.getElementById('display-name');
-    const signupBtn = document.getElementById('signup-btn');
-    const chooseUsername = document.getElementById('choose-username');
-    const setUsernameBtn = document.getElementById('set-username-btn');
-    const showSignup = document.getElementById('show-signup');
-    const showLogin = document.getElementById('show-login');
-    const resetPasswordBtn = document.getElementById('reset-password-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const roomList = document.getElementById('room-list');
-    const newRoomName = document.getElementById('new-room-name');
-    const userList = document.getElementById('user-list');
-    const currentRoomName = document.getElementById('current-room-name');
-    const messages = document.getElementById('messages');
-    const messageInput = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
-	const recordVoiceBtn = document.getElementById('record-voice-btn');
-    const typingIndicator = document.getElementById('typing-indicator');
-    const userName = document.getElementById('user-name');
-    const userAvatar = document.getElementById('user-avatar');
-    const refreshUsersBtn = document.getElementById('refresh-users-btn');
-    const recentChatsList = document.getElementById('recent-chats-list');
-    const startNewChatBtn = document.getElementById('start-new-chat-btn');
-    const newChatModal = document.getElementById('new-chat-modal');
-    const closeModalBtn = document.getElementById('close-modal-btn');
-    const openNewRoomModalBtn = document.getElementById('open-new-room-modal-btn');
-    const newRoomModal = document.getElementById('new-room-modal');
-    const closeNewRoomModalBtn = document.getElementById('close-new-room-modal-btn');
-    const newRoomNameModal = document.getElementById('new-room-name-modal');
-    const newRoomErrorMessage = document.getElementById('new-room-error-message');
-    const searchUserInput = document.getElementById('search-user-input');
-    const searchResults = document.getElementById('search-results');
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const sidebar = document.getElementById('sidebar');
+    // DOM ELEMENTS ====================================================
+    
+    // Authentication
+    let authContainer = document.getElementById('auth-container');
+    let appMain = document.getElementById('app-main');
+    let guestTab = document.getElementById('guest-tab');
+    let accountTab = document.getElementById('account-tab');
+    let guestPanel = document.getElementById('guest-panel');
+    let accountPanel = document.getElementById('account-panel');
+    let signupPanel = document.getElementById('signup-panel');
+    let usernamePanel = document.getElementById('username-panel');
+    let guestUsername = document.getElementById('guest-username');
+    let guestLoginBtn = document.getElementById('guest-login-btn');
+    let emailInput = document.getElementById('email');
+    let passwordInput = document.getElementById('password');
+    let loginBtn = document.getElementById('login-btn');
+    let signupEmail = document.getElementById('signup-email');
+    let signupPassword = document.getElementById('signup-password');
+    let displayName = document.getElementById('display-name');
+    let signupBtn = document.getElementById('signup-btn');
+    let chooseUsername = document.getElementById('choose-username');
+    let setUsernameBtn = document.getElementById('set-username-btn');
+    let showSignup = document.getElementById('show-signup');
+    let showLogin = document.getElementById('show-login');
+    let resetPasswordBtn = document.getElementById('reset-password-btn');
+    let logoutBtn = document.getElementById('logout-btn');
+    
+    // Main App UI
+    let roomList = document.getElementById('room-list');
+    let newRoomName = document.getElementById('new-room-name');
+    let userList = document.getElementById('user-list');
+    let currentRoomName = document.getElementById('current-room-name');
+    let messages = document.getElementById('messages');
+    let messageInput = document.getElementById('message-input');
+    let sendBtn = document.getElementById('send-btn');
+    let recordVoiceBtn = document.getElementById('record-voice-btn');
+    let typingIndicator = document.getElementById('typing-indicator');
+    let userName = document.getElementById('user-name');
+    let userAvatar = document.getElementById('user-avatar');
+    let refreshUsersBtn = document.getElementById('refresh-users-btn');
+    let recentChatsList = document.getElementById('recent-chats-list');
+    let startNewChatBtn = document.getElementById('start-new-chat-btn');
+    let newChatModal = document.getElementById('new-chat-modal');
+    let closeModalBtn = document.getElementById('close-modal-btn');
+    let openNewRoomModalBtn = document.getElementById('open-new-room-modal-btn');
+    let newRoomModal = document.getElementById('new-room-modal');
+    let closeNewRoomModalBtn = document.getElementById('close-new-room-modal-btn');
+    let newRoomNameModal = document.getElementById('new-room-name-modal');
+    let newRoomErrorMessage = document.getElementById('new-room-error-message');
+    let searchUserInput = document.getElementById('search-user-input');
+    let searchResults = document.getElementById('search-results');
+    let mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    let sidebar = document.getElementById('sidebar');
     
     // Admin-specific DOM elements
-    const adminPanel = document.getElementById('admin-section');
-    const banUserBtn = document.getElementById('ban-user-btn');
-    const unbanUserBtn = document.getElementById('unban-user-btn');
-    const adminUserSelect = document.getElementById('admin-user-select');
-    const adminReasonInput = document.getElementById('admin-reason-input');
-    const adminActionMessage = document.getElementById('admin-action-message');
+    let adminPanel = document.getElementById('admin-section');
+    let banUserBtn = document.getElementById('ban-user-btn');
+    let unbanUserBtn = document.getElementById('unban-user-btn');
+    let adminUserSelect = document.getElementById('admin-user-select');
+    let adminReasonInput = document.getElementById('admin-reason-input');
+    let adminActionMessage = document.getElementById('admin-action-message');
     
     // Leader-specific DOM elements
-    const grantAdminBtn = document.getElementById('grant-admin-btn');
-    const revokeAdminBtn = document.getElementById('revoke-admin-btn')
+    let grantAdminBtn = document.getElementById('grant-admin-btn');
+    let revokeAdminBtn = document.getElementById('revoke-admin-btn');
     
     // Image upload elements
-    const imageInput = document.getElementById('image-input');
-    const uploadBtn = document.getElementById('image-upload-btn');
-    const previewContainer = document.getElementById('image-preview-container');
-    const cancelBtn = document.getElementById('cancel-image-btn');
-    const imagePreview = document.getElementById('image-preview');
-    const imageName = document.getElementById('image-name');
-    const imageSize = document.getElementById('image-size');
-	
-	// Call elements
-	const callModal = document.getElementById('call-modal');
-	const endCallBtn = document.getElementById('end-call-btn');
-	const acceptCallBtn = document.getElementById('accept-call-btn');
-	const rejectCallBtn = document.getElementById('reject-call-btn');
-	const toggleVideoBtn = document.getElementById('toggle-video-btn');
-	const toggleMicBtn = document.getElementById('toggle-mic-btn');
-	const callUserName = document.getElementById('call-user-name');
-	const callTimer = document.getElementById('call-timer');
+    let imageInput = document.getElementById('image-input');
+    let uploadBtn = document.getElementById('image-upload-btn');
+    let previewContainer = document.getElementById('image-preview-container');
+    let cancelBtn = document.getElementById('cancel-image-btn');
+    let imagePreview = document.getElementById('image-preview');
+    let imageName = document.getElementById('image-name');
+    let imageSize = document.getElementById('image-size');
     
-    // State variables
-    let currentUser = null;
-    let currentRoom = 'general';
-    let isTyping = false;
-    let typingTimer = null;
-    let privateChatUser = null;
-    let heartbeatInterval = null;
-    let recentChats = [];
-    let collapsedSections = {};
-    let allUsers = {};
-    let bannedUsers = {};
-    let adminUsers = {};
-    let messagesRef = null;
-    let replyingTo = null;
-    let loadingTasks = 0;
-    let messagesCallback = null;
-    let currentMessagesRef = null;
-    let usersValueCallback = null;
-    let selectedImage = null;
-    let isUploading = false;
-	let isRecording = false;
-	let mediaRecorder = null;
-	let audioChunks = []; 
-	let localStream = null;
-	let remoteStream = null;
-	let localVideo = document.getElementById('local-video');
-	let remoteVideo = document.getElementById('remote-video');
-	let peerConnection = null;
-	let currentCall = null;
-	let callTimerInterval = null;
-    let isInitialized = false;
-	let callStartTime = null;
-	let isCallActive = false;
-	let incomingCallData = null;
-
+    // --- Call UI Elements (Updated for aa-echo integration) ---
+    let callModal = document.getElementById('call-modal');
+    let callUserName = document.getElementById('call-user-name');
+    let callTimer = document.getElementById('call-timer');
+    let localVideo = document.getElementById('local-video');
+    let remoteVideo = document.getElementById('remote-video');
+    let localAudio = document.getElementById('local-audio');
+    let remoteAudio = document.getElementById('remote-audio');
+    let endCallBtn = document.getElementById('end-call-btn');
+    let acceptCallBtn = document.getElementById('accept-call-btn');
+    let rejectCallBtn = document.getElementById('reject-call-btn');
+    let toggleVideoBtn = document.getElementById('toggle-video-btn');
+    let toggleMicBtn = document.getElementById('toggle-mic-btn');
 
     // ====================================================================================================
     // UTILITY FUNCTIONS
@@ -4570,4 +4542,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Testing unban notification...");
         hideBannedNotification();
     }
+
 });

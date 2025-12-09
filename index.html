@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>aa-whisper</title>
-    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,21 +20,21 @@
             <div class="auth-form">
                 <div class="app-logo">
                     <h1>aa-whisper.</h1>
-                    <p>private messaging client.</p>
+                    <p>private messaging and calling client.</p>
                 </div>
                 <div class="auth-tabs">
-                    <button class="auth-tab active" id="account-tab">Account Login</button>
-                    <button class="auth-tab" id="guest-tab">Chat as Guest</button>
+                    <button class="auth-tab active" id="account-tab">account login</button>
+                    <button class="auth-tab" id="guest-tab">join as guest</button>
                 </div>
                 
                 <!-- Guest Login Form -->
                 <div class="auth-panel" id="guest-panel">
                     <div class="disabled-overlay">
-                        <h3>Guest Login Disabled</h3>
-                        <p>Please create an account to join the chat.</p>
+                        <h3>uest login disabled</h3>
+                        <p>u gotta make an account to join the chat, mate.</p>
                     </div>
                     <h2>jump in.</h2>
-                    <p>you won't be able to access your private chats again after logging out.</p>
+                    <p>ur info will not be saved after sign-out.</p>
                     <div class="input-with-button">
                         <input type="text" id="guest-username" placeholder="display name" maxlength="20">
                         <button id="guest-login-btn">join</button>
@@ -56,12 +56,12 @@
                 <!-- Sign Up Form -->
                 <div class="auth-panel" id="signup-panel">
                     <h2>welcome.</h2>
-                    <input type="email" id="signup-email" placeholder="Email">
+                    <input type="email" id="signup-email" placeholder="email">
                     <div class="input-with-button">
-                        <input type="password" id="signup-password" placeholder="Password (must be 6+ characters)">
+                        <input type="password" id="signup-password" placeholder="password (must be 6+ characters)">
                     </div>
                     <div class="input-with-button">
-                        <input type="text" id="display-name" placeholder="Display Name">
+                        <input type="text" id="display-name" placeholder="display name">
                         <button id="signup-btn">sign up</button>
                     </div>
                     <p class="auth-switch">already have an account? <a href="#" id="show-login">log in.</a></p>
@@ -72,7 +72,7 @@
                     <h3>choose your username.</h3>
                     <p>this is how others will see you in chat.</p>
                     <input type="text" id="choose-username" placeholder="display name" maxlength="20">
-                    <button id="set-username-btn">continue</button>
+                    <button id="set-username-btn">go</button>
                 </div>
             </div>
         </section>
@@ -306,4 +306,5 @@
 	<audio id="notification-sound" src="sounds/new_message.mp3" preload="auto"></audio>
 
 </body>
+
 </html>

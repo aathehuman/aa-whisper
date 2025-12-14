@@ -769,13 +769,37 @@ input, button, select, textarea {
 }
 .section-content.collapsed { max-height: 0; opacity: 0; }
 
+.material-symbols-outlined {
+	line-height: 0;
+	display: block;
+}
+
+.call-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2px;
+	cursor: pointer;
+	border-radius: 15px;
+	transition: transform 0.3s, color 0.3s;
+}
+
+.call-btn .icon {
+	width: 25px;
+	height: 25px;
+	fill: #bb86fc;
+	display: block;
+}
+
+.call-btn:hover { background: rgba(187, 134, 252, 0.1); transition: transform 0.3s, color 0.3s; }
+
 /* ==================== RECENT CHATS & ROOMS SECTIONS ==================== */
 .recent-chats-list, .room-list {
     padding: 0 20px 15px;
     display: flex;
     flex-direction: column;
     gap: 5px;
-    max-height: 200px;
+    max-height: 1000px;
     overflow-y: auto;
 }
 
@@ -827,7 +851,7 @@ input, button, select, textarea {
     background: linear-gradient(to right, 
         rgba(76, 175, 80, 0.25) 0%,
 		rgba(255, 255, 255, 0.25) 100%); 
-    border-right: 3px solid #fff;
+    border-right: 5px solid #fff;
 	transition: all 0.3s ease;
 }
 
@@ -859,15 +883,15 @@ input, button, select, textarea {
     background: linear-gradient(to right, 
 		rgba(84, 102, 235, 0.25) 0%,
 		rgba(255, 255, 255, 0.25) 100%);
-	border-right: 3px solid #fff;
+	border-right: 5px solid #fff;
 	transition: all 0.3s ease;
 }
 
 .recent-chat-item.leader.typing {
-    background: linear-gradient(to right, 
+    background: linear-gradient(to right,
 		rgba(255, 215, 0, 0.25) 0%
 		rgba(255, 255, 255, 0.5) 100%);
-	border-right: 3px solid #fff;
+	border-right: 5px solid #fff;
 	transition: all 0.3s ease;
 }
 
@@ -1343,210 +1367,6 @@ body.theme-dark .leader-contact .chat-name {
     pointer-events: none;
     user-select: none;
     transition: filter 0.3s ease, opacity 0.3s ease;
-}
-
-/* ==================== CALLING STYLES (MIGRATED FROM AA-ECHO) ==================== */
-
-/* The main modal for the call interface */
-#call-modal {
-    display: none; /* Controlled by JS */
-    position: fixed;
-    z-index: 1001; /* Higher than other modals */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
-}
-
-.call-modal-content {
-    background-color: var(--background-secondary);
-    margin: 0 auto; /* Centered differently */
-    padding: 0;
-    border-radius: 15px;
-    width: 100%;
-    max-width: 900px;
-    height: 90vh;
-    max-height: 700px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--border-color);
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-/* Video Container */
-.video-container {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--background-primary);
-    border-radius: 15px 15px 0 0;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Video Elements */
-.video-element {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    background-color: #000;
-}
-
-#remote-video {
-    z-index: 1;
-}
-
-#local-video {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 200px;
-    height: 150px;
-    border: 2px solid var(--primary-color);
-    border-radius: 15px;
-    z-index: 2;
-    background-color: #333;
-    transform: scaleX(-1); /* Mirror local video */
-}
-
-/* Call Header */
-.call-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background-color: var(--background-tertiary);
-    border-bottom: 1px solid var(--border-color);
-    border-radius: 15px 15px 0 0;
-}
-
-.call-user-info h3 {
-    color: var(--text-primary);
-    font-size: 18px;
-    margin: 0;
-}
-
-.call-user-info p {
-    color: var(--text-secondary);
-    font-size: 14px;
-    margin: 0;
-}
-
-/* Call Controls */
-.call-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    gap: 20px;
-    background-color: var(--background-tertiary);
-    border-radius: 0 0 15px 15px;
-}
-
-.call-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 28px;
-    color: var(--text-primary);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease, transform 0.2s ease;
-}
-
-.call-btn:hover {
-    transform: scale(1.1);
-}
-
-.call-btn.mic-active { color: var(--text-primary); }
-.call-btn.mic-muted { color: var(--error-color); background-color: rgba(207, 102, 121, 0.1); }
-.call-btn.video-active { color: var(--text-primary); }
-.call-btn.video-disabled { color: var(--error-color); background-color: rgba(207, 102, 121, 0.1); }
-.call-btn.end-call {
-    background-color: var(--error-color);
-    color: white;
-}
-.call-btn.end-call:hover {
-    background-color: #d32f2f;
-}
-
-/* Incoming Call Screen */
-.incoming-call-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    text-align: center;
-    padding: 40px;
-}
-
-.incoming-call-container .user-avatar {
-    width: 120px;
-    height: 120px;
-    font-size: 48px;
-    margin-bottom: 20px;
-    border: 3px solid var(--primary-color);
-}
-
-.incoming-call-container h2 {
-    color: var(--text-primary);
-    font-size: 28px;
-    margin-bottom: 10px;
-}
-
-.incoming-call-container p {
-    color: var(--text-secondary);
-    font-size: 18px;
-    margin-bottom: 40px;
-}
-
-.incoming-call-controls {
-    display: flex;
-    gap: 30px;
-}
-
-.incoming-call-controls .call-btn {
-    width: 80px;
-    height: 80px;
-    font-size: 36px;
-}
-
-.incoming-call-controls .call-btn.accept {
-    background-color: var(--success-color);
-    color: white;
-}
-.incoming-call-controls .call-btn.accept:hover {
-    background-color: #388e3c;
-}
-
-/* Call Button in Sidebar */
-.sidebar-call-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 16px;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    transition: all 0.2s ease;
-    margin-left: auto; /* Pushes it to the right */
-}
-
-.sidebar-call-btn:hover {
-    color: var(--primary-color);
-    background-color: rgba(187, 134, 252, 0.1);
-    transform: scale(1.1);
 }
 
 /* ==================== SPECIAL COMPONENTS ==================== */

@@ -65,94 +65,101 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log("%c welcome to whisper! ", 'font-size: 30px; background: linear-gradient(135deg, #1a1a2e, #32264a); border: 1px solid #fff; border-radius: 30px; font-weight: 1000;');
     
-    // DOM ELEMENTS ====================================================
-    
-    // Authentication
-    let authContainer = document.getElementById('auth-container');
-    let appMain = document.getElementById('app-main');
-    let guestTab = document.getElementById('guest-tab');
-    let accountTab = document.getElementById('account-tab');
-    let guestPanel = document.getElementById('guest-panel');
-    let accountPanel = document.getElementById('account-panel');
-    let signupPanel = document.getElementById('signup-panel');
-    let usernamePanel = document.getElementById('username-panel');
-    let guestUsername = document.getElementById('guest-username');
-    let guestLoginBtn = document.getElementById('guest-login-btn');
-    let emailInput = document.getElementById('email');
-    let passwordInput = document.getElementById('password');
-    let loginBtn = document.getElementById('login-btn');
-    let signupEmail = document.getElementById('signup-email');
-    let signupPassword = document.getElementById('signup-password');
-    let displayName = document.getElementById('display-name');
-    let signupBtn = document.getElementById('signup-btn');
-    let chooseUsername = document.getElementById('choose-username');
-    let setUsernameBtn = document.getElementById('set-username-btn');
-    let showSignup = document.getElementById('show-signup');
-    let showLogin = document.getElementById('show-login');
-    let resetPasswordBtn = document.getElementById('reset-password-btn');
-    let logoutBtn = document.getElementById('logout-btn');
-    
-    // Main App UI
-    let roomList = document.getElementById('room-list');
-    let newRoomName = document.getElementById('new-room-name');
-    let userList = document.getElementById('user-list');
-    let currentRoomName = document.getElementById('current-room-name');
-    let messages = document.getElementById('messages');
-    let messageInput = document.getElementById('message-input');
-    let sendBtn = document.getElementById('send-btn');
-    let recordVoiceBtn = document.getElementById('record-voice-btn');
-    let typingIndicator = document.getElementById('typing-indicator');
-    let userName = document.getElementById('user-name');
-    let userAvatar = document.getElementById('user-avatar');
-    let refreshUsersBtn = document.getElementById('refresh-users-btn');
-    let recentChatsList = document.getElementById('recent-chats-list');
-    let startNewChatBtn = document.getElementById('start-new-chat-btn');
-    let newChatModal = document.getElementById('new-chat-modal');
-    let closeModalBtn = document.getElementById('close-modal-btn');
-    let openNewRoomModalBtn = document.getElementById('open-new-room-modal-btn');
-    let newRoomModal = document.getElementById('new-room-modal');
-    let closeNewRoomModalBtn = document.getElementById('close-new-room-modal-btn');
-    let newRoomNameModal = document.getElementById('new-room-name-modal');
-    let newRoomErrorMessage = document.getElementById('new-room-error-message');
-    let searchUserInput = document.getElementById('search-user-input');
-    let searchResults = document.getElementById('search-results');
-    let mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    let sidebar = document.getElementById('sidebar');
+    // DOM elements
+    const authContainer = document.getElementById('auth-container');
+    const appMain = document.getElementById('app-main');
+    const guestTab = document.getElementById('guest-tab');
+    const accountTab = document.getElementById('account-tab');
+    const guestPanel = document.getElementById('guest-panel');
+    const accountPanel = document.getElementById('account-panel');
+    const signupPanel = document.getElementById('signup-panel');
+    const usernamePanel = document.getElementById('username-panel');
+    const guestUsername = document.getElementById('guest-username');
+    const guestLoginBtn = document.getElementById('guest-login-btn');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('login-btn');
+    const signupEmail = document.getElementById('signup-email');
+    const signupPassword = document.getElementById('signup-password');
+    const displayName = document.getElementById('display-name');
+    const signupBtn = document.getElementById('signup-btn');
+    const chooseUsername = document.getElementById('choose-username');
+    const setUsernameBtn = document.getElementById('set-username-btn');
+    const showSignup = document.getElementById('show-signup');
+    const showLogin = document.getElementById('show-login');
+    const resetPasswordBtn = document.getElementById('reset-password-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const roomList = document.getElementById('room-list');
+    const newRoomName = document.getElementById('new-room-name');
+    const userList = document.getElementById('user-list');
+    const currentRoomName = document.getElementById('current-room-name');
+    const messages = document.getElementById('messages');
+    const messageInput = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-btn');
+    const recordVoiceBtn = document.getElementById('record-voice-btn');
+    const typingIndicator = document.getElementById('typing-indicator');
+    const userName = document.getElementById('user-name');
+    const userAvatar = document.getElementById('user-avatar');
+    const refreshUsersBtn = document.getElementById('refresh-users-btn');
+    const recentChatsList = document.getElementById('recent-chats-list');
+    const startNewChatBtn = document.getElementById('start-new-chat-btn');
+    const newChatModal = document.getElementById('new-chat-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const openNewRoomModalBtn = document.getElementById('open-new-room-modal-btn');
+    const newRoomModal = document.getElementById('new-room-modal');
+    const closeNewRoomModalBtn = document.getElementById('close-new-room-modal-btn');
+    const newRoomNameModal = document.getElementById('new-room-name-modal');
+    const newRoomErrorMessage = document.getElementById('new-room-error-message');
+    const searchUserInput = document.getElementById('search-user-input');
+    const searchResults = document.getElementById('search-results');
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const sidebar = document.getElementById('sidebar');
     
     // Admin-specific DOM elements
-    let adminPanel = document.getElementById('admin-section');
-    let banUserBtn = document.getElementById('ban-user-btn');
-    let unbanUserBtn = document.getElementById('unban-user-btn');
-    let adminUserSelect = document.getElementById('admin-user-select');
-    let adminReasonInput = document.getElementById('admin-reason-input');
-    let adminActionMessage = document.getElementById('admin-action-message');
+    const adminPanel = document.getElementById('admin-section');
+    const banUserBtn = document.getElementById('ban-user-btn');
+    const unbanUserBtn = document.getElementById('unban-user-btn');
+    const adminUserSelect = document.getElementById('admin-user-select');
+    const adminReasonInput = document.getElementById('admin-reason-input');
+    const adminActionMessage = document.getElementById('admin-action-message');
     
     // Leader-specific DOM elements
-    let grantAdminBtn = document.getElementById('grant-admin-btn');
-    let revokeAdminBtn = document.getElementById('revoke-admin-btn');
+    const grantAdminBtn = document.getElementById('grant-admin-btn');
+    const revokeAdminBtn = document.getElementById('revoke-admin-btn')
     
     // Image upload elements
-    let imageInput = document.getElementById('image-input');
-    let uploadBtn = document.getElementById('image-upload-btn');
-    let previewContainer = document.getElementById('image-preview-container');
-    let cancelBtn = document.getElementById('cancel-image-btn');
-    let imagePreview = document.getElementById('image-preview');
-    let imageName = document.getElementById('image-name');
-    let imageSize = document.getElementById('image-size');
+    const imageInput = document.getElementById('image-input');
+    const uploadBtn = document.getElementById('image-upload-btn');
+    const previewContainer = document.getElementById('image-preview-container');
+    const cancelBtn = document.getElementById('cancel-image-btn');
+    const imagePreview = document.getElementById('image-preview');
+    const imageName = document.getElementById('image-name');
+    const imageSize = document.getElementById('image-size');
     
-    // --- Call UI Elements (Updated for aa-echo integration) ---
-    let callModal = document.getElementById('call-modal');
-    let callUserName = document.getElementById('call-user-name');
-    let callTimer = document.getElementById('call-timer');
-    let localVideo = document.getElementById('local-video');
-    let remoteVideo = document.getElementById('remote-video');
-    let localAudio = document.getElementById('local-audio');
-    let remoteAudio = document.getElementById('remote-audio');
-    let endCallBtn = document.getElementById('end-call-btn');
-    let acceptCallBtn = document.getElementById('accept-call-btn');
-    let rejectCallBtn = document.getElementById('reject-call-btn');
-    let toggleVideoBtn = document.getElementById('toggle-video-btn');
-    let toggleMicBtn = document.getElementById('toggle-mic-btn');
+    // State variables
+    let currentUser = null;
+    let currentRoom = 'general';
+    let isTyping = false;
+    let typingTimer = null;
+    let privateChatUser = null;
+    let heartbeatInterval = null;
+    let recentChats = [];
+    let collapsedSections = {};
+    let allUsers = {};
+    let bannedUsers = {};
+    let adminUsers = {};
+    let messagesRef = null;
+    let replyingTo = null;
+    let loadingTasks = 0;
+    let messagesCallback = null;
+    let currentMessagesRef = null;
+    let usersValueCallback = null;
+    let selectedImage = null;
+    let isUploading = false;
+    let isRecording = false;
+    let mediaRecorder = null;
+    let audioChunks = []; 
+    let isInitialized = false;
 
     // ====================================================================================================
     // UTILITY FUNCTIONS
@@ -280,14 +287,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Clear existing options
         adminUserSelect.innerHTML = '';
-		
-		// Add default "Select User" option
-		const defaultOption = document.createElement('option');
-		defaultOption.value = '';
-		defaultOption.textContent = 'pick one..';
-		defaultOption.selected = true;
-		defaultOption.disabled = true;
-		adminUserSelect.appendChild(defaultOption);
+        
+        // Add default "Select User" option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'pick one..';
+        defaultOption.selected = true;
+        defaultOption.disabled = true;
+        adminUserSelect.appendChild(defaultOption);
         
         // 1. Create an array from the users object
         const usersArray = [];
@@ -389,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
-	
+    
     // ====================================================================================================
     // IN-APP NOTIFICATION SYSTEM
     // ====================================================================================================
@@ -1345,21 +1352,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Sign up new user
-	function signUp() {
-		const email = signupEmail.value.trim();
-		const password = signupPassword.value;
-		const name = displayName.value.trim();
-		
-		// Validate inputs
-		if (!email || !password || !name) {
-			notifications.error('Please fill all fields', 'Validation Error', 3000);
-			return;
-		}
-		
-		if (password.length < 6) {
-			notifications.error('Password must be at least 6 characters', 'Validation Error', 3000);
-			return;
-		}
+    function signUp() {
+        const email = signupEmail.value.trim();
+        const password = signupPassword.value;
+        const name = displayName.value.trim();
+        
+        // Validate inputs
+        if (!email || !password || !name) {
+            notifications.error('Please fill all fields', 'Validation Error', 3000);
+            return;
+        }
+        
+        if (password.length < 6) {
+            notifications.error('Password must be at least 6 characters', 'Validation Error', 3000);
+            return;
+        }
         
         if (email && password && name) {
             // Loading animation START
@@ -1941,16 +1948,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-	// Switch to a different room
-	function switchRoom(roomId) {
-		// NEW: Clear typing indicators
-		clearAllTypingIndicators();
-		
-		// Detach any existing message listener
-		if (currentMessagesRef) {
-			currentMessagesRef.off();
-			currentMessagesRef = null;
-		}
+    // Switch to a different room
+    function switchRoom(roomId) {
+        // NEW: Clear typing indicators
+        clearAllTypingIndicators();
+        
+        // Detach any existing message listener
+        if (currentMessagesRef) {
+            currentMessagesRef.off();
+            currentMessagesRef = null;
+        }
         
         // Update state
         currentRoom = roomId;
@@ -2398,134 +2405,134 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-	// Load contacts list
-	function loadContactsList() {
-		console.log("👥📋 Loading contacts list. The allUsers object contains:", allUsers);
+    // Load contacts list
+    function loadContactsList() {
+        console.log("👥📋 Loading contacts list. The allUsers object contains:", allUsers);
 
-		if (!recentChatsList) return; // Safety check
+        if (!recentChatsList) return; // Safety check
 
-		recentChatsList.innerHTML = '';
+        recentChatsList.innerHTML = '';
 
-		const now = Date.now();
-		const twoMinutesAgo = now - (2 * 60 * 1000);
-		const usersToShow = [];
+        const now = Date.now();
+        const twoMinutesAgo = now - (2 * 60 * 1000);
+        const usersToShow = [];
 
-		// Combine recent chats and all users into one list
-		const allContactIds = new Set([...recentChats, ...Object.keys(allUsers)]);
+        // Combine recent chats and all users into one list
+        const allContactIds = new Set([...recentChats, ...Object.keys(allUsers)]);
 
-		allContactIds.forEach(userId => {
-			if (userId === currentUser.uid) return; // Don't add yourself
-			if (isUserBanned(userId)) return; // Skip banned users
+        allContactIds.forEach(userId => {
+            if (userId === currentUser.uid) return; // Don't add yourself
+            if (isUserBanned(userId)) return; // Skip banned users
 
-			const user = allUsers[userId];
-			if (!user) return;
+            const user = allUsers[userId];
+            if (!user) return;
 
-			// Filter out old guests
-			if (user.isGuest && (!user.lastSeen || user.lastSeen < twoMinutesAgo)) {
-				return;
-			}
+            // Filter out old guests
+            if (user.isGuest && (!user.lastSeen || user.lastSeen < twoMinutesAgo)) {
+                return;
+            }
 
-			usersToShow.push({
-				userId: userId,
-				user: user,
-				isOnline: user.lastSeen && user.lastSeen > twoMinutesAgo,
-				isLeader: window.leaderIds && window.leaderIds[userId],
-				isAdmin: adminUsers[userId]
-			});
-		});
+            usersToShow.push({
+                userId: userId,
+                user: user,
+                isOnline: user.lastSeen && user.lastSeen > twoMinutesAgo,
+                isLeader: window.leaderIds && window.leaderIds[userId],
+                isAdmin: adminUsers[userId]
+            });
+        });
 
-		// Sorting logic: Leaders first, then online status, then alphabetically
-		usersToShow.sort((a, b) => {
-			// 1. Leaders always come first
-			if (a.isLeader && !b.isLeader) {
-				return -1; // a comes before b
-			}
-			if (!a.isLeader && b.isLeader) {
-				return 1; // b comes before a
-			}
-			
-			// 2. If both are leaders or both are not leaders, check online status
-			if (a.isOnline && !b.isOnline) {
-				return -1; // a comes before b
-			}
-			if (!a.isOnline && b.isOnline) {
-				return 1; // b comes before a
-			}
-			
-			// 3. If both have same leader/online status, sort alphabetically
-			return a.user.displayName.localeCompare(b.user.displayName);
-		});
+        // Sorting logic: Leaders first, then online status, then alphabetically
+        usersToShow.sort((a, b) => {
+            // 1. Leaders always come first
+            if (a.isLeader && !b.isLeader) {
+                return -1; // a comes before b
+            }
+            if (!a.isLeader && b.isLeader) {
+                return 1; // b comes before a
+            }
+            
+            // 2. If both are leaders or both are not leaders, check online status
+            if (a.isOnline && !b.isOnline) {
+                return -1; // a comes before b
+            }
+            if (!a.isOnline && b.isOnline) {
+                return 1; // b comes before a
+            }
+            
+            // 3. If both have same leader/online status, sort alphabetically
+            return a.user.displayName.localeCompare(b.user.displayName);
+        });
 
-		if (usersToShow.length === 0) {
-			const emptyMessage = document.createElement('div');
-			emptyMessage.style.color = 'var(--text-secondary)';
-			emptyMessage.style.fontSize = '12px';
-			emptyMessage.style.padding = '10px';
-			emptyMessage.textContent = 'No contacts found.';
-			recentChatsList.appendChild(emptyMessage);
-			return;
-		}
+        if (usersToShow.length === 0) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.style.color = 'var(--text-secondary)';
+            emptyMessage.style.fontSize = '12px';
+            emptyMessage.style.padding = '10px';
+            emptyMessage.textContent = 'No contacts found.';
+            recentChatsList.appendChild(emptyMessage);
+            return;
+        }
 
-		// Build the UI from the sorted array
-		usersToShow.forEach(({ userId, user, isOnline, isLeader, isAdmin }) => {
-			const chatItem = document.createElement('div');
-			chatItem.classList.add('recent-chat-item');
-			chatItem.dataset.userId = userId;
-			
-			// Add gradient classes based on status
-			if (isOnline) {
-				chatItem.classList.add('online');
-			} else {
-				chatItem.classList.add('offline');
-			}
-			
-			// Add role-based gradient classes - prioritize leader over admin
-			if (isLeader) {
-				chatItem.classList.add('leader');
-			} else if (isAdmin) {
-				chatItem.classList.add('admin');
-			}
-			
-			// Highlight the active chat
-			if (privateChatUser && privateChatUser === userId) {
-				chatItem.classList.add('active');
-			}
+        // Build the UI from the sorted array
+        usersToShow.forEach(({ userId, user, isOnline, isLeader, isAdmin }) => {
+            const chatItem = document.createElement('div');
+            chatItem.classList.add('recent-chat-item');
+            chatItem.dataset.userId = userId;
+            
+            // Add gradient classes based on status
+            if (isOnline) {
+                chatItem.classList.add('online');
+            } else {
+                chatItem.classList.add('offline');
+            }
+            
+            // Add role-based gradient classes - prioritize leader over admin
+            if (isLeader) {
+                chatItem.classList.add('leader');
+            } else if (isAdmin) {
+                chatItem.classList.add('admin');
+            }
+            
+            // Highlight the active chat
+            if (privateChatUser && privateChatUser === userId) {
+                chatItem.classList.add('active');
+            }
 
-			const chatInfo = document.createElement('div');
-			chatInfo.classList.add('chat-info');
+            const chatInfo = document.createElement('div');
+            chatInfo.classList.add('chat-info');
 
-			const chatName = document.createElement('div');
-			chatName.classList.add('chat-name');
+            const chatName = document.createElement('div');
+            chatName.classList.add('chat-name');
 
-			// Build display text
-			let displayText = user.displayName || 'Unknown User';
-			if (user.isGuest) {
-				displayText += ' (Guest)';
-			}
+            // Build display text
+            let displayText = user.displayName || 'Unknown User';
+            if (user.isGuest) {
+                displayText += ' (Guest)';
+            }
 
-			// Add role indicators - prioritize leader over admin
-			if (!displayText.includes('👑') && window.leaderIds && window.leaderIds[userId]) {
-				displayText += ' 👑'; // Leaders get crown
-			} else if (!displayText.includes('⚡') && adminUsers[userId]) {
-				displayText += ' ⚡'; // Admins get lightning bolt
-			}
+            // Add role indicators - prioritize leader over admin
+            if (!displayText.includes('👑') && window.leaderIds && window.leaderIds[userId]) {
+                displayText += ' 👑'; // Leaders get crown
+            } else if (!displayText.includes('⚡') && adminUsers[userId]) {
+                displayText += ' ⚡'; // Admins get lightning bolt
+            }
 
-			chatName.textContent = displayText;
+            chatName.textContent = displayText;
 
-			chatInfo.appendChild(chatName);
-			chatItem.appendChild(chatInfo);
+            chatInfo.appendChild(chatName);
+            chatItem.appendChild(chatInfo);
 
-			chatItem.addEventListener('click', () => {
-				startPrivateChat(userId);
-				// Close mobile sidebar after selecting chat
-				if (window.innerWidth <= 480 && sidebar) {
-					sidebar.classList.remove('open');
-				}
-			});
+            chatItem.addEventListener('click', () => {
+                startPrivateChat(userId);
+                // Close mobile sidebar after selecting chat
+                if (window.innerWidth <= 480 && sidebar) {
+                    sidebar.classList.remove('open');
+                }
+            });
 
-			recentChatsList.appendChild(chatItem);
-		});
-	}
+            recentChatsList.appendChild(chatItem);
+        });
+    }
 
     // Search for users
     function searchForUsers(searchTerm) {
@@ -2693,21 +2700,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (newChatModal) newChatModal.style.display = 'block';
     }
 
-	// Start private chat with a user
-	function startPrivateChat(userId) {
-		// Clear typing indicators
-		clearAllTypingIndicators();
-		
-		// Check if user is banned
-		if (isUserBanned(userId)) {
-			notifications.error("this is a banned user, bro. u can't chat with them now.", 'user not available', '6000');
-			return;
-		}
-		
-		privateChatUser = userId;
-		
-		// Add to recent chats
-		addToRecentChats(userId);
+    // Start private chat with a user
+    function startPrivateChat(userId) {
+        // Clear typing indicators
+        clearAllTypingIndicators();
+        
+        // Check if user is banned
+        if (isUserBanned(userId)) {
+            notifications.error("this is a banned user, bro. u can't chat with them now.", 'user not available', '6000');
+            return;
+        }
+        
+        privateChatUser = userId;
+        
+        // Add to recent chats
+        addToRecentChats(userId);
         
         database.ref('users/' + userId).once('value', snapshot => {
             if (snapshot.exists()) {
@@ -2974,147 +2981,147 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-	// Display a message
-	function displayMessage(message) {
-		const senderId = message.userId || message.senderId;
-		
-		// Check if message object exists
-		if (!message) {
-			console.error("Invalid message object:", message);
-			return;
-		}
-		
-		// Only play sound if message is NOT from current user AND tab is inactive
-		if (senderId !== currentUser.uid && !isTabActive()) {
-			playNotificationSound();
-		}
-		
-		// Check if sender is banned
-		if (isUserBanned(senderId)) {
-			console.log("Message from banned user, not displaying.");
-			return;
-		}
+    // Display a message
+    function displayMessage(message) {
+        const senderId = message.userId || message.senderId;
+        
+        // Check if message object exists
+        if (!message) {
+            console.error("Invalid message object:", message);
+            return;
+        }
+        
+        // Only play sound if message is NOT from current user AND tab is inactive
+        if (senderId !== currentUser.uid && !isTabActive()) {
+            playNotificationSound();
+        }
+        
+        // Check if sender is banned
+        if (isUserBanned(senderId)) {
+            console.log("Message from banned user, not displaying.");
+            return;
+        }
 
-		const messagesContainer = document.getElementById('messages');
-		if (!messagesContainer) {
-			console.error("Could not find the messages container element!");
-			return;
-		}
+        const messagesContainer = document.getElementById('messages');
+        if (!messagesContainer) {
+            console.error("Could not find the messages container element!");
+            return;
+        }
 
-		const messageElement = document.createElement('div');
-		messageElement.classList.add('message');
-		messageElement.dataset.messageId = message.messageId || message.key || 'unknown';
-		messageElement.dataset.timestamp = message.timestamp;
-		
-		// Check if message is from current user
-		const isCurrentUser = senderId === currentUser.uid;
-		if (isCurrentUser) {
-			messageElement.classList.add('current-user');
-		}
-		
-		// Add guest status if it exists
-		if (message.isGuest) {
-			messageElement.setAttribute('data-guest', 'true');
-		}
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.dataset.messageId = message.messageId || message.key || 'unknown';
+        messageElement.dataset.timestamp = message.timestamp;
+        
+        // Check if message is from current user
+        const isCurrentUser = senderId === currentUser.uid;
+        if (isCurrentUser) {
+            messageElement.classList.add('current-user');
+        }
+        
+        // Add guest status if it exists
+        if (message.isGuest) {
+            messageElement.setAttribute('data-guest', 'true');
+        }
 
-		// Add role indicator - prioritize leader over admin
-		if (window.leaderIds && window.leaderIds[senderId]) {
-			messageElement.classList.add('leader-message');
-		} else if (adminUsers[senderId]) {
-			messageElement.classList.add('admin-message');
-		}
+        // Add role indicator - prioritize leader over admin
+        if (window.leaderIds && window.leaderIds[senderId]) {
+            messageElement.classList.add('leader-message');
+        } else if (adminUsers[senderId]) {
+            messageElement.classList.add('admin-message');
+        }
 
-		// Handle replies
-		if (message.replyTo) {
-			messageElement.classList.add('is-reply');
-			
-			const repliedToElement = document.createElement('div');
-			repliedToElement.classList.add('replied-to-message');
-			repliedToElement.innerHTML = `<strong>${message.replyTo.username || message.replyTo.senderName}:</strong> ${message.replyTo.text}`;
-			messageElement.appendChild(repliedToElement);
-		}
-		
-		// Create username element with role indicators
-		const usernameElement = document.createElement('div');
-		usernameElement.classList.add('username');
+        // Handle replies
+        if (message.replyTo) {
+            messageElement.classList.add('is-reply');
+            
+            const repliedToElement = document.createElement('div');
+            repliedToElement.classList.add('replied-to-message');
+            repliedToElement.innerHTML = `<strong>${message.replyTo.username || message.replyTo.senderName}:</strong> ${message.replyTo.text}`;
+            messageElement.appendChild(repliedToElement);
+        }
+        
+        // Create username element with role indicators
+        const usernameElement = document.createElement('div');
+        usernameElement.classList.add('username');
 
-		let displayName = message.username || message.senderName || 'Unknown User';
+        let displayName = message.username || message.senderName || 'Unknown User';
 
-		// Add role indicators - prioritize leader over admin
-		if (!displayName.includes('👑') && window.leaderIds && window.leaderIds[senderId]) {
-			displayName += ' 👑'; // Leaders get crown
-		} else if (!displayName.includes('⚡') && adminUsers[senderId]) {
-			displayName += ' ⚡'; // Admins get lightning bolt
-		}
+        // Add role indicators - prioritize leader over admin
+        if (!displayName.includes('👑') && window.leaderIds && window.leaderIds[senderId]) {
+            displayName += ' 👑'; // Leaders get crown
+        } else if (!displayName.includes('⚡') && adminUsers[senderId]) {
+            displayName += ' ⚡'; // Admins get lightning bolt
+        }
 
-		usernameElement.textContent = displayName;
-		messageElement.appendChild(usernameElement);
-		
-		// Create content element
-		const contentElement = document.createElement('div');
-		contentElement.classList.add('content');
+        usernameElement.textContent = displayName;
+        messageElement.appendChild(usernameElement);
+        
+        // Create content element
+        const contentElement = document.createElement('div');
+        contentElement.classList.add('content');
 
-		// Check message type and render accordingly
-		if (message.type === 'voice') {
-			const audioPlayer = document.createElement('audio');
-			audioPlayer.src = message.content;
-			audioPlayer.controls = true;
-			audioPlayer.classList.add('voice-player');
-			contentElement.appendChild(audioPlayer);
-		} else {
-			const textElement = document.createElement('div');
-			textElement.classList.add('text');
-			textElement.textContent = message.text || message.content;
-			contentElement.appendChild(textElement);
-		}
-		messageElement.appendChild(contentElement);
-		
-		// Create timestamp element
-		const timeElement = document.createElement('div');
-		timeElement.classList.add('time');
-		
-		const date = new Date(message.timestamp);
-		timeElement.textContent = `${formatTime(date)} • ${formatShortDate(date)}`;
-		messageElement.appendChild(timeElement);
-		
-		// Add reply button for non-current users
-		if (!isCurrentUser) {
-			const replyButtonContainer = document.createElement('div');
-			replyButtonContainer.classList.add('reply-button-container');
-			
-			const replyButton = document.createElement('button');
-			replyButton.classList.add('reply-button');
-			replyButton.textContent = 'Reply';
-			
-			// Add the click event listener to initiate the reply
-			replyButton.addEventListener('click', () => {
-				setReplyingTo({
-					id: senderId,
-					username: message.username || message.senderName,
-					text: message.text
-				});
-			});
-			
-			replyButtonContainer.appendChild(replyButton);
-			messageElement.appendChild(replyButtonContainer);
-		}
-		
-		// Add message to container
-		messagesContainer.appendChild(messageElement);
-		
-		// Scroll to bottom
-		messagesContainer.scrollTop = messagesContainer.scrollHeight;
-	}
+        // Check message type and render accordingly
+        if (message.type === 'voice') {
+            const audioPlayer = document.createElement('audio');
+            audioPlayer.src = message.content;
+            audioPlayer.controls = true;
+            audioPlayer.classList.add('voice-player');
+            contentElement.appendChild(audioPlayer);
+        } else {
+            const textElement = document.createElement('div');
+            textElement.classList.add('text');
+            textElement.textContent = message.text || message.content;
+            contentElement.appendChild(textElement);
+        }
+        messageElement.appendChild(contentElement);
+        
+        // Create timestamp element
+        const timeElement = document.createElement('div');
+        timeElement.classList.add('time');
+        
+        const date = new Date(message.timestamp);
+        timeElement.textContent = `${formatTime(date)} • ${formatShortDate(date)}`;
+        messageElement.appendChild(timeElement);
+        
+        // Add reply button for non-current users
+        if (!isCurrentUser) {
+            const replyButtonContainer = document.createElement('div');
+            replyButtonContainer.classList.add('reply-button-container');
+            
+            const replyButton = document.createElement('button');
+            replyButton.classList.add('reply-button');
+            replyButton.textContent = 'Reply';
+            
+            // Add the click event listener to initiate the reply
+            replyButton.addEventListener('click', () => {
+                setReplyingTo({
+                    id: senderId,
+                    username: message.username || message.senderName,
+                    text: message.text
+                });
+            });
+            
+            replyButtonContainer.appendChild(replyButton);
+            messageElement.appendChild(replyButtonContainer);
+        }
+        
+        // Add message to container
+        messagesContainer.appendChild(messageElement);
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
 
     // Send a message
     async function sendMessage() {
         console.log("💬⤴️ sendMessage function STARTED =====");
-		
-	    // Prevent sending other messages while recording or uploading
-		if (isRecording || isUploading) {
-			notifications.warning("Please wait for the voice message to finish processing.", "Please Wait");
-			return;
-		}
+        
+        // Prevent sending other messages while recording or uploading
+        if (isRecording || isUploading) {
+            notifications.warning("Please wait for the voice message to finish processing.", "Please Wait");
+            return;
+        }
         
         const messageText = messageInput.value.trim();
         console.log("💬⤴️ Message text:", messageText);
@@ -3168,7 +3175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Standardize message data structure
         const baseMessageData = {
             senderId: currentUser.uid,
-			receiverId: privateChatUser,
+            receiverId: privateChatUser,
             senderName: currentUser.displayName || 'User',
             text: messageText,
             timestamp: timestamp,
@@ -3316,447 +3323,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Focus the input field
         if (messageInput) messageInput.focus();
     }
-	
-		// ====================================================================================================
-		// CALLING FUNCTIONALITY
-		// ====================================================================================================
-
-		// --- WebRTC Configuration ---
-		const configuration = {
-			iceServers: [
-				{ urls: 'stun:stun.l.google.com:19302' },
-				{ urls: 'stun:stun1.l.google.com:19302' }
-			]
-		};
-
-		// --- Main Calling Functions ---
-
-		// Initialize a call (outgoing)
-		async function initiateCall(userId) {
-			if (!currentUser || !userId || userId === currentUser.uid) {
-				notifications.error("Invalid user for call.", "Error");
-				return;
-			}
-
-			const user = allUsers[userId];
-			if (!user) {
-				notifications.error("User not found.", "Error");
-				return;
-			}
-
-			// Check if user is online
-			const now = Date.now();
-			const twoMinutesAgo = now - (2 * 60 * 1000);
-			if (!user.lastSeen || user.lastSeen < twoMinutesAgo) {
-				notifications.warning(`${user.displayName} is offline.`, "Cannot Call");
-				return;
-			}
-
-			// Set up local media
-			try {
-				localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-				if (localVideo) {
-					localVideo.srcObject = localStream;
-				}
-			} catch (error) {
-				console.error("Error accessing media devices:", error);
-				notifications.error("Could not access camera or microphone.", "Media Error");
-				return;
-			}
-
-			// Create peer connection
-			createPeerConnection();
-
-			// Add local stream to peer connection
-			localStream.getTracks().forEach(track => {
-				peerConnection.addTrack(track, localStream);
-			});
-
-			// Create offer
-			const offer = await peerConnection.createOffer();
-			await peerConnection.setLocalDescription(offer);
-
-			// Send call offer to the other user via Firebase
-			const callData = {
-				caller: currentUser.uid,
-				callerName: currentUser.displayName,
-				receiver: userId,
-				offer: offer,
-				timestamp: firebase.database.ServerValue.TIMESTAMP
-			};
-
-			currentCall = await database.ref('calls').push(callData);
-			isCallActive = true;
-
-			// Show call UI
-			showActiveCallUI(user.displayName);
-
-			// Listen for call end
-			currentCall.on('value', (snapshot) => {
-				const data = snapshot.val();
-				if (!data || data.status === 'ended') {
-					endCall();
-				}
-			});
-		}
-
-		// Handle an incoming call
-		async function handleIncomingCall(callId, callData) {
-			incomingCallData = { id: callId, ...callData };
-
-			const callerUser = allUsers[callData.caller];
-			if (!callerUser) return;
-
-			// Show incoming call UI
-			showIncomingCallUI(callerUser.displayName);
-
-			// Auto-reject after 30 seconds if not answered
-			setTimeout(() => {
-				if (incomingCallData && incomingCallData.id === callId) {
-					rejectCall();
-				}
-			}, 30000);
-		}
-
-		// Accept an incoming call
-		async function acceptCall() {
-			if (!incomingCallData) return;
-
-			const { id, offer, caller } = incomingCallData;
-
-			// Set up local media
-			try {
-				localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-				if (localVideo) {
-					localVideo.srcObject = localStream;
-				}
-			} catch (error) {
-				console.error("Error accessing media devices:", error);
-				notifications.error("Could not access camera or microphone.", "Media Error");
-				rejectCall();
-				return;
-			}
-
-			// Create peer connection
-			createPeerConnection();
-
-			// Add local stream to peer connection
-			localStream.getTracks().forEach(track => {
-				peerConnection.addTrack(track, localStream);
-			});
-
-			// Set remote description from offer
-			await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-
-			// Create answer
-			const answer = await peerConnection.createAnswer();
-			await peerConnection.setLocalDescription(answer);
-
-			// Update call in Firebase with answer
-			await database.ref(`calls/${id}`).update({
-				answer: answer,
-				status: 'connected'
-			});
-
-			isCallActive = true;
-			currentCall = database.ref(`calls/${id}`);
-
-			// Show active call UI
-			const callingUser = allUsers[incomingCallData.caller];
-			showActiveCallUI(callingUser.displayName);
-
-			// Listen for call end
-			currentCall.on('value', (snapshot) => {
-				const data = snapshot.val();
-				if (!data || data.status === 'ended') {
-					endCall();
-				}
-			});
-
-			incomingCallData = null;
-		}
-
-		// Reject an incoming call
-		async function rejectCall() {
-			if (!incomingCallData) return;
-
-			const { id } = incomingCallData;
-
-			// Update call status in Firebase
-			await database.ref(`calls/${id}`).update({
-				status: 'rejected'
-			});
-
-			// Hide call UI
-			hideCallUI();
-
-			incomingCallData = null;
-		}
-
-		// End an active call
-		async function endCall() {
-			if (currentCall) {
-				// Update call status in Firebase
-				await currentCall.update({
-					status: 'ended'
-				});
-				currentCall = null;
-			}
-
-			// Stop local stream
-			if (localStream) {
-				localStream.getTracks().forEach(track => track.stop());
-				localStream = null;
-			}
-
-			// Stop remote stream
-			if (remoteStream) {
-				remoteStream.getTracks().forEach(track => track.stop());
-				remoteStream = null;
-			}
-
-			// Close peer connection
-			if (peerConnection) {
-				peerConnection.close();
-				peerConnection = null;
-			}
-
-			// Clear call timer
-			if (callTimerInterval) {
-				clearInterval(callTimerInterval);
-				callTimerInterval = null;
-			}
-
-			// Hide call UI
-			hideCallUI();
-
-			isCallActive = false;
-			callStartTime = null;
-		}
-
-		// --- WebRTC Helper Functions ---
-
-		function createPeerConnection() {
-			peerConnection = new RTCPeerConnection(configuration);
-
-			// Handle ICE candidates
-			peerConnection.onicecandidate = (event) => {
-				if (event.candidate && currentCall) {
-					currentCall.child('iceCandidates').push(event.candidate);
-				}
-			};
-
-			// Handle remote stream
-			peerConnection.ontrack = (event) => {
-				remoteStream = event.streams[0];
-				if (remoteVideo) {
-					remoteVideo.srcObject = remoteStream;
-				}
-			};
-		}
-
-		// --- Call UI Functions ---
-
-		function showIncomingCallUI(callerName) {
-			if (!callModal) return;
-
-			const modalContent = callModal.querySelector('.modal-content');
-			modalContent.innerHTML = `
-				<div class="incoming-call-container">
-					<div class="user-avatar">${callerName ? callerName.charAt(0).toUpperCase() : '?'}</div>
-					<h2>${callerName || 'Unknown User'}</h2>
-					<p>Incoming call...</p>
-					<div class="incoming-call-controls">
-						<button class="call-btn accept" id="accept-call-btn">✓</button>
-						<button class="call-btn end-call" id="reject-call-btn">✕</button>
-					</div>
-				</div>
-			`;
-
-			// Re-attach event listeners
-			document.getElementById('accept-call-btn').addEventListener('click', acceptCall);
-			document.getElementById('reject-call-btn').addEventListener('click', rejectCall);
-
-			callModal.style.display = 'block';
-		}
-
-		function showActiveCallUI(callerName) {
-			if (!callModal) return;
-
-			callStartTime = Date.now();
-			startCallTimer();
-
-			const modalContent = callModal.querySelector('.modal-content');
-			modalContent.innerHTML = `
-				<div class="call-header">
-					<div class="call-user-info">
-						<h3>${callerName || 'Unknown User'}</h3>
-						<p id="call-timer">00:00</p>
-					</div>
-				</div>
-				<div class="video-container">
-					<video id="remote-video" class="video-element" autoplay></video>
-					<video id="local-video" class="video-element" autoplay muted></video>
-				</div>
-				<div class="call-controls">
-					<button class="call-btn mic-active" id="toggle-mic-btn">🎤</button>
-					<button class="call-btn video-active" id="toggle-video-btn">📹</button>
-					<button class="call-btn end-call" id="end-call-btn">📞</button>
-				</div>
-			`;
-
-			// Re-attach event listeners and update DOM references
-			document.getElementById('end-call-btn').addEventListener('click', endCall);
-			document.getElementById('toggle-mic-btn').addEventListener('click', toggleMic);
-			document.getElementById('toggle-video-btn').addEventListener('click', toggleVideo);
-
-			// Update global DOM element references
-			localVideo = document.getElementById('local-video');
-			remoteVideo = document.getElementById('remote-video');
-			callTimer = document.getElementById('call-timer');
-
-			// Set local video stream if already available
-			if (localVideo && localStream) {
-				localVideo.srcObject = localStream;
-			}
-
-			callModal.style.display = 'block';
-		}
-
-		function hideCallUI() {
-			if (callModal) {
-				callModal.style.display = 'none';
-			}
-		}
-
-		function startCallTimer() {
-			if (!callTimer) return;
-
-			callTimerInterval = setInterval(() => {
-				const now = Date.now();
-				const duration = Math.floor((now - callStartTime) / 1000);
-				const minutes = Math.floor(duration / 60).toString().padStart(2, '0');
-				const seconds = (duration % 60).toString().padStart(2, '0');
-				callTimer.textContent = `${minutes}:${seconds}`;
-			}, 1000);
-		}
-
-		// --- Call Control Functions ---
-
-		function toggleMic() {
-			if (!localStream) return;
-
-			const audioTrack = localStream.getAudioTracks()[0];
-			if (audioTrack) {
-				audioTrack.enabled = !audioTrack.enabled;
-				const micBtn = document.getElementById('toggle-mic-btn');
-				if (micBtn) {
-					micBtn.className = audioTrack.enabled ? 'call-btn mic-active' : 'call-btn mic-muted';
-					micBtn.textContent = audioTrack.enabled ? '🎤' : '🔇';
-				}
-			}
-		}
-
-		function toggleVideo() {
-			if (!localStream) return;
-
-			const videoTrack = localStream.getVideoTracks()[0];
-			if (videoTrack) {
-				videoTrack.enabled = !videoTrack.enabled;
-				const videoBtn = document.getElementById('toggle-video-btn');
-				if (videoBtn) {
-					videoBtn.className = videoTrack.enabled ? 'call-btn video-active' : 'call-btn video-disabled';
-					videoBtn.textContent = videoTrack.enabled ? '📹' : '📵';
-				}
-			}
-		}
-
-		// --- Firebase Listeners for Call Signaling ---
-
-		function setupCallListeners() {
-			// Listen for incoming calls
-			database.ref('calls').orderByChild('receiver').equalTo(currentUser.uid).on('child_added', (snapshot) => {
-				const callData = snapshot.val();
-				if (callData.status === 'calling') {
-					handleIncomingCall(snapshot.key, callData);
-				}
-			});
-
-			// Listen for call answers and ICE candidates
-			database.ref('calls').on('child_changed', (snapshot) => {
-				const callData = snapshot.val();
-				
-				// Handle answer to our outgoing call
-				if (isCallActive && currentCall && currentCall.key === snapshot.key && callData.answer) {
-					peerConnection.setRemoteDescription(new RTCSessionDescription(callData.answer));
-				}
-			});
-
-			// Listen for ICE candidates
-			database.ref('calls').on('child_added', (snapshot) => {
-				const callData = snapshot.val();
-				
-				// Handle ICE candidates for our call
-				if (isCallActive && currentCall && currentCall.key === snapshot.key && callData.iceCandidates) {
-					Object.values(callData.iceCandidates).forEach(candidate => {
-						peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-					});
-				}
-			});
-		}
-
-		// --- Add Call Button to User List ---
-
-		function addCallButtonToUserList() {
-			const recentChatItems = document.querySelectorAll('.recent-chat-item');
-			
-			recentChatItems.forEach(item => {
-				const userId = item.dataset.userId;
-				
-				// Skip if it's the current user or if button already exists
-				if (userId === currentUser.uid || item.querySelector('.sidebar-call-btn')) {
-					return;
-				}
-
-				const user = allUsers[userId];
-				if (!user) return;
-
-				// Check if user is online
-				const now = Date.now();
-				const twoMinutesAgo = now - (2 * 60 * 1000);
-				const isOnline = user.lastSeen && user.lastSeen > twoMinutesAgo;
-
-				if (isOnline) {
-					const callBtn = document.createElement('button');
-					callBtn.className = 'sidebar-call-btn';
-					callBtn.textContent = '📞';
-					callBtn.title = 'Start a call';
-					callBtn.addEventListener('click', () => initiateCall(userId));
-
-					const chatInfo = item.querySelector('.chat-info');
-					if (chatInfo) {
-						chatInfo.appendChild(callBtn);
-					}
-				}
-			});
-		}
-
-		// --- Initialize Call Listeners ---
-
-		// Call setupCallListeners when user is set up
-		const originalSetupUser = setupUser;
-		setupUser = function() {
-			originalSetupUser().then(() => {
-				setupCallListeners();
-			});
-		};
-
-		// Add call buttons when contacts list is loaded
-		const originalLoadContactsList = loadContactsList;
-		loadContactsList = function() {
-			originalLoadContactsList();
-			addCallButtonToUserList();
-		};
 
     // ====================================================================================================
     // IMAGE UPLOAD FUNCTIONS
@@ -3910,323 +3476,323 @@ document.addEventListener('DOMContentLoaded', function() {
     // TYPING INDICATOR FUNCTIONS
     // ====================================================================================================
     
-	// Handle typing indicator
-	function handleTyping() {
-		if (!currentUser) return;
-		
-		// NEW: Clear typing status when switching chats
-		clearAllTypingIndicators();
-		
-		if (!isTyping) {
-			isTyping = true;
-			
-			let typingRef;
-			
-			if (privateChatUser) {
-				// Private typing
-				const chatId = [currentUser.uid, privateChatUser].sort().join('_');
-				typingRef = database.ref('typing/' + chatId + '/' + currentUser.uid);
-			} else {
-				// Room typing
-				typingRef = database.ref('typing/' + currentRoom + '/' + currentUser.uid);
-			}
-			
-			// Set typing status
-			typingRef.set(true);
-			
-			// Auto-remove after 3 seconds of inactivity
-			clearTimeout(typingTimer);
-			typingTimer = setTimeout(stopTyping, 3000);
-			
-			// Set up disconnect handler
-			typingRef.onDisconnect().remove();
-		} else {
-			// Reset timer
-			clearTimeout(typingTimer);
-		}
-	}
+    // Handle typing indicator
+    function handleTyping() {
+        if (!currentUser) return;
+        
+        // NEW: Clear typing status when switching chats
+        clearAllTypingIndicators();
+        
+        if (!isTyping) {
+            isTyping = true;
+            
+            let typingRef;
+            
+            if (privateChatUser) {
+                // Private typing
+                const chatId = [currentUser.uid, privateChatUser].sort().join('_');
+                typingRef = database.ref('typing/' + chatId + '/' + currentUser.uid);
+            } else {
+                // Room typing
+                typingRef = database.ref('typing/' + currentRoom + '/' + currentUser.uid);
+            }
+            
+            // Set typing status
+            typingRef.set(true);
+            
+            // Auto-remove after 3 seconds of inactivity
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(stopTyping, 3000);
+            
+            // Set up disconnect handler
+            typingRef.onDisconnect().remove();
+        } else {
+            // Reset timer
+            clearTimeout(typingTimer);
+        }
+    }
 
-	// Clear all typing indicators when switching
-	function clearAllTypingIndicators() {
-		const chatButtons = document.querySelectorAll('.recent-chat-item');
-		chatButtons.forEach(button => {
-			// Remove typing class but keep online/offline status
-			button.classList.remove('typing');
-			
-			// Get user ID from button
-			const userId = button.dataset.userId;
-			if (userId && allUsers[userId]) {
-				const now = Date.now();
-				const twoMinutesAgo = now - (2 * 60 * 1000);
-				const isOnline = allUsers[userId].lastSeen && allUsers[userId].lastSeen > twoMinutesAgo;
-				
-				// Remove all status classes first
-				button.classList.remove('online', 'offline');
-				
-				// Restore online/offline status
-				if (isOnline) {
-					button.classList.add('online');
-				} else {
-					button.classList.add('offline');
-				}
-			}
-		});
-	}
+    // Clear all typing indicators when switching
+    function clearAllTypingIndicators() {
+        const chatButtons = document.querySelectorAll('.recent-chat-item');
+        chatButtons.forEach(button => {
+            // Remove typing class but keep online/offline status
+            button.classList.remove('typing');
+            
+            // Get user ID from button
+            const userId = button.dataset.userId;
+            if (userId && allUsers[userId]) {
+                const now = Date.now();
+                const twoMinutesAgo = now - (2 * 60 * 1000);
+                const isOnline = allUsers[userId].lastSeen && allUsers[userId].lastSeen > twoMinutesAgo;
+                
+                // Remove all status classes first
+                button.classList.remove('online', 'offline');
+                
+                // Restore online/offline status
+                if (isOnline) {
+                    button.classList.add('online');
+                } else {
+                    button.classList.add('offline');
+                }
+            }
+        });
+    }
 
-	// Stop typing indicator
-	function stopTyping() {
-		isTyping = false;
-		
-		let typingRef;
-		
-		if (privateChatUser) {
-			// Private typing
-			const chatId = [currentUser.uid, privateChatUser].sort().join('_');
-			typingRef = database.ref('typing/' + chatId + '/' + currentUser.uid);
-		} else {
-			// Room typing
-			typingRef = database.ref('typing/' + currentRoom + '/' + currentUser.uid);
-		}
-		
-		// Remove typing status
-		typingRef.remove();
-		
-		// Clear local indicator
-		clearTimeout(typingTimer);
-	}
+    // Stop typing indicator
+    function stopTyping() {
+        isTyping = false;
+        
+        let typingRef;
+        
+        if (privateChatUser) {
+            // Private typing
+            const chatId = [currentUser.uid, privateChatUser].sort().join('_');
+            typingRef = database.ref('typing/' + chatId + '/' + currentUser.uid);
+        } else {
+            // Room typing
+            typingRef = database.ref('typing/' + currentRoom + '/' + currentUser.uid);
+        }
+        
+        // Remove typing status
+        typingRef.remove();
+        
+        // Clear local indicator
+        clearTimeout(typingTimer);
+    }
 
-	// Listen for typing indicators
-	async function setupTypingListeners() {
-		if (!typingIndicator) return; // Added: Null check
-		
-		// Clear existing typing indicator
-		typingIndicator.textContent = '';
-		
-		let typingRef;
-		
-		if (privateChatUser) {
-			// Private chat typing indicator
-			const chatId = [currentUser.uid, privateChatUser].sort().join('_');
-			typingRef = database.ref('typing/' + chatId);
-		} else {
-			// Room typing indicator
-			typingRef = database.ref('typing/' + currentRoom);
-		}
-		
-		typingRef.on('value', async (snapshot) => {
-			if (!snapshot.exists()) {
-				updateTypingIndicator([]);
-				return;
-			}
+    // Listen for typing indicators
+    async function setupTypingListeners() {
+        if (!typingIndicator) return; // Added: Null check
+        
+        // Clear existing typing indicator
+        typingIndicator.textContent = '';
+        
+        let typingRef;
+        
+        if (privateChatUser) {
+            // Private chat typing indicator
+            const chatId = [currentUser.uid, privateChatUser].sort().join('_');
+            typingRef = database.ref('typing/' + chatId);
+        } else {
+            // Room typing indicator
+            typingRef = database.ref('typing/' + currentRoom);
+        }
+        
+        typingRef.on('value', async (snapshot) => {
+            if (!snapshot.exists()) {
+                updateTypingIndicator([]);
+                return;
+            }
 
-			const typingUserIds = Object.keys(snapshot.val() || {});
-			const validTypingUserIds = typingUserIds.filter(uid => 
-				uid !== currentUser.uid && !isUserBanned(uid)
-			);
+            const typingUserIds = Object.keys(snapshot.val() || {});
+            const validTypingUserIds = typingUserIds.filter(uid => 
+                uid !== currentUser.uid && !isUserBanned(uid)
+            );
 
-			if (validTypingUserIds.length === 0) {
-				updateTypingIndicator([]);
-				return;
-			}
+            if (validTypingUserIds.length === 0) {
+                updateTypingIndicator([]);
+                return;
+            }
 
-			// Fetch user data for all typing users at once
-			const userPromises = validTypingUserIds.map(uid => 
-				database.ref('users/' + uid).once('value').then(snap => snap.exists() ? snap.val() : null)
-			);
+            // Fetch user data for all typing users at once
+            const userPromises = validTypingUserIds.map(uid => 
+                database.ref('users/' + uid).once('value').then(snap => snap.exists() ? snap.val() : null)
+            );
 
-			try {
-				const users = await Promise.all(userPromises);
-				const typingNames = users
-					.filter(user => user !== null) // Filter out null results
-					.map(user => user.displayName || 'Unknown User');
+            try {
+                const users = await Promise.all(userPromises);
+                const typingNames = users
+                    .filter(user => user !== null) // Filter out null results
+                    .map(user => user.displayName || 'Unknown User');
 
-				updateTypingIndicator(typingNames);
-			} catch (error) {
-				console.error("Error fetching typing users:", error);
-				updateTypingIndicator([]); // Clear indicator on error
-			}
-		});
-		
-		// NEW: Listen for typing status changes
-		typingRef.on('child_added', async (snapshot) => {
-			const userId = snapshot.key;
-			const isTyping = snapshot.val();
-			
-			if (userId === currentUser.uid || isUserBanned(userId)) {
-				return; // Ignore own typing and banned users
-			}
-			
-			// Update chat button UI
-			updateChatButtonTypingStatus(userId, isTyping);
-		});
-		
-		// Listen for typing removal
-		typingRef.on('child_removed', async (snapshot) => {
-			const userId = snapshot.key;
-			updateChatButtonTypingStatus(userId, false);
-		});
-	}
+                updateTypingIndicator(typingNames);
+            } catch (error) {
+                console.error("Error fetching typing users:", error);
+                updateTypingIndicator([]); // Clear indicator on error
+            }
+        });
+        
+        // NEW: Listen for typing status changes
+        typingRef.on('child_added', async (snapshot) => {
+            const userId = snapshot.key;
+            const isTyping = snapshot.val();
+            
+            if (userId === currentUser.uid || isUserBanned(userId)) {
+                return; // Ignore own typing and banned users
+            }
+            
+            // Update chat button UI
+            updateChatButtonTypingStatus(userId, isTyping);
+        });
+        
+        // Listen for typing removal
+        typingRef.on('child_removed', async (snapshot) => {
+            const userId = snapshot.key;
+            updateChatButtonTypingStatus(userId, false);
+        });
+    }
 
-	// Update individual chat button typing status
-	function updateChatButtonTypingStatus(userId, isTyping) {
-		// Find the chat button for this user
-		const chatButtons = document.querySelectorAll('.recent-chat-item');
-		
-		chatButtons.forEach(button => {
-			if (button.dataset.userId === userId) {
-				const user = allUsers[userId];
-				if (!user) return;
-				
-				// Remove typing class
-				button.classList.remove('typing');
-				
-				if (isTyping) {
-					// Add typing class but keep online status
-					button.classList.add('typing');
-				} else {
-					// Remove typing class and check online status
-					const now = Date.now();
-					const twoMinutesAgo = now - (2 * 60 * 1000);
-					const isUserOnline = user.lastSeen && user.lastSeen > twoMinutesAgo;
-					
-					// Remove all status classes first
-					button.classList.remove('online', 'offline');
-					
-					// Restore online/offline status
-					if (isUserOnline) {
-						button.classList.add('online');
-					} else {
-						button.classList.add('offline');
-					}
-				}
-			}
-		});
-	}
+    // Update individual chat button typing status
+    function updateChatButtonTypingStatus(userId, isTyping) {
+        // Find the chat button for this user
+        const chatButtons = document.querySelectorAll('.recent-chat-item');
+        
+        chatButtons.forEach(button => {
+            if (button.dataset.userId === userId) {
+                const user = allUsers[userId];
+                if (!user) return;
+                
+                // Remove typing class
+                button.classList.remove('typing');
+                
+                if (isTyping) {
+                    // Add typing class but keep online status
+                    button.classList.add('typing');
+                } else {
+                    // Remove typing class and check online status
+                    const now = Date.now();
+                    const twoMinutesAgo = now - (2 * 60 * 1000);
+                    const isUserOnline = user.lastSeen && user.lastSeen > twoMinutesAgo;
+                    
+                    // Remove all status classes first
+                    button.classList.remove('online', 'offline');
+                    
+                    // Restore online/offline status
+                    if (isUserOnline) {
+                        button.classList.add('online');
+                    } else {
+                        button.classList.add('offline');
+                    }
+                }
+            }
+        });
+    }
 
-	// Update typing indicator UI
-	function updateTypingIndicator(users) {
-		const typingIndicator = document.getElementById('typing-indicator');
-		if (!typingIndicator) return;
-		
-		if (users.length === 0) {
-			typingIndicator.textContent = '';
-		} else if (users.length === 1) {
-			typingIndicator.textContent = `${users[0]} is typing...`;
-		} else {
-			typingIndicator.textContent = `${users.join(', ')} are typing...`;
-		}
-	}
+    // Update typing indicator UI
+    function updateTypingIndicator(users) {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (!typingIndicator) return;
+        
+        if (users.length === 0) {
+            typingIndicator.textContent = '';
+        } else if (users.length === 1) {
+            typingIndicator.textContent = `${users[0]} is typing...`;
+        } else {
+            typingIndicator.textContent = `${users.join(', ')} are typing...`;
+        }
+    }
 
-	// ====================================================================================================
-	// VOICE MESSAGE FUNCTIONS
-	// ====================================================================================================
+    // ====================================================================================================
+    // VOICE MESSAGE FUNCTIONS
+    // ====================================================================================================
 
-	function startRecording() {
-		if (isRecording) return;
+    function startRecording() {
+        if (isRecording) return;
 
-		navigator.mediaDevices.getUserMedia({ audio: true })
-			.then(stream => {
-				isRecording = true;
-				audioChunks = [];
-				mediaRecorder = new MediaRecorder(stream);
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                isRecording = true;
+                audioChunks = [];
+                mediaRecorder = new MediaRecorder(stream);
 
-				mediaRecorder.ondataavailable = event => {
-					audioChunks.push(event.data);
-				};
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
 
-				mediaRecorder.onstop = () => {
-					const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-					uploadVoiceMessage(audioBlob);
-				};
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                    uploadVoiceMessage(audioBlob);
+                };
 
-				mediaRecorder.start();
-				recordVoiceBtn.textContent = '⏹️';
-				recordVoiceBtn.classList.add('recording');
-			})
-			.catch(err => {
-				console.error("Error accessing microphone:", err);
-				notifications.error("Could not access your microphone. Please check permissions.", "Microphone Error");
-			});
-	}
+                mediaRecorder.start();
+                recordVoiceBtn.textContent = '⏹️';
+                recordVoiceBtn.classList.add('recording');
+            })
+            .catch(err => {
+                console.error("Error accessing microphone:", err);
+                notifications.error("Could not access your microphone. Please check permissions.", "Microphone Error");
+            });
+    }
 
-	function stopRecording() {
-		if (!isRecording || !mediaRecorder) return;
+    function stopRecording() {
+        if (!isRecording || !mediaRecorder) return;
 
-		mediaRecorder.stop();
-		mediaRecorder.stream.getTracks().forEach(track => track.stop());
-		isRecording = false;
-		recordVoiceBtn.textContent = '🎤';
-		recordVoiceBtn.classList.remove('recording');
-	}
+        mediaRecorder.stop();
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        isRecording = false;
+        recordVoiceBtn.textContent = '🎤';
+        recordVoiceBtn.classList.remove('recording');
+    }
 
-	async function uploadVoiceMessage(audioBlob) {
-		if (!storage) {
-			notifications.error("Firebase Storage is not available.", "Upload Error");
-			return;
-		}
+    async function uploadVoiceMessage(audioBlob) {
+        if (!storage) {
+            notifications.error("Firebase Storage is not available.", "Upload Error");
+            return;
+        }
 
-		isUploading = true;
-		sendBtn.disabled = true;
-		recordVoiceBtn.disabled = true;
-		notifications.info("Uploading voice message...", "Uploading");
+        isUploading = true;
+        sendBtn.disabled = true;
+        recordVoiceBtn.disabled = true;
+        notifications.info("Uploading voice message...", "Uploading");
 
-		const timestamp = Date.now();
-		const fileName = `voiceMessages/${currentUser.uid}/${timestamp}.mp3`;
-		const storageRef = storage.ref(fileName);
+        const timestamp = Date.now();
+        const fileName = `voiceMessages/${currentUser.uid}/${timestamp}.mp3`;
+        const storageRef = storage.ref(fileName);
 
-		try {
-			const uploadTask = storageRef.put(audioBlob);
-			await uploadTask;
+        try {
+            const uploadTask = storageRef.put(audioBlob);
+            await uploadTask;
 
-			const downloadURL = await storageRef.getDownloadURL();
-			sendVoiceMessage(downloadURL);
-		} catch (error) {
-			console.error("Error uploading voice message:", error);
-			notifications.error("Failed to upload voice message.", "Upload Error");
-		} finally {
-			isUploading = false;
-			sendBtn.disabled = false;
-			recordVoiceBtn.disabled = false;
-		}
-	}
+            const downloadURL = await storageRef.getDownloadURL();
+            sendVoiceMessage(downloadURL);
+        } catch (error) {
+            console.error("Error uploading voice message:", error);
+            notifications.error("Failed to upload voice message.", "Upload Error");
+        } finally {
+            isUploading = false;
+            sendBtn.disabled = false;
+            recordVoiceBtn.disabled = false;
+        }
+    }
 
-	function sendVoiceMessage(audioUrl) {
-		if (!currentUser) return;
+    function sendVoiceMessage(audioUrl) {
+        if (!currentUser) return;
 
-		const timestamp = Date.now();
-		let messageRef;
-		let messageData;
+        const timestamp = Date.now();
+        let messageRef;
+        let messageData;
 
-		const baseMessageData = {
-			senderId: currentUser.uid,
-			senderName: currentUser.displayName || 'User',
-			timestamp: timestamp,
-			isGuest: currentUser.isAnonymous,
-			type: 'voice',
-			content: audioUrl
-		};
+        const baseMessageData = {
+            senderId: currentUser.uid,
+            senderName: currentUser.displayName || 'User',
+            timestamp: timestamp,
+            isGuest: currentUser.isAnonymous,
+            type: 'voice',
+            content: audioUrl
+        };
 
-		if (privateChatUser) {
-			const chatId = [currentUser.uid, privateChatUser].sort().join('_');
-			messageRef = database.ref('privateMessages/' + chatId);
-			messageData = baseMessageData;
-		} else {
-			messageRef = database.ref('messages/' + currentRoom);
-			messageData = { ...baseMessageData, userId: currentUser.uid, username: currentUser.displayName || 'User' };
-		}
+        if (privateChatUser) {
+            const chatId = [currentUser.uid, privateChatUser].sort().join('_');
+            messageRef = database.ref('privateMessages/' + chatId);
+            messageData = baseMessageData;
+        } else {
+            messageRef = database.ref('messages/' + currentRoom);
+            messageData = { ...baseMessageData, userId: currentUser.uid, username: currentUser.displayName || 'User' };
+        }
 
-		messageRef.push(messageData)
-			.then(() => {
-				console.log("Voice message sent successfully!");
-				if (privateChatUser) {
-					addToRecentChats(privateChatUser);
-				}
-			})
-			.catch(error => {
-				console.error("Error sending voice message:", error);
-				notifications.error("Failed to send voice message.", "Send Error");
-			});
-	}
+        messageRef.push(messageData)
+            .then(() => {
+                console.log("Voice message sent successfully!");
+                if (privateChatUser) {
+                    addToRecentChats(privateChatUser);
+                }
+            })
+            .catch(error => {
+                console.error("Error sending voice message:", error);
+                notifications.error("Failed to send voice message.", "Send Error");
+            });
+    }
 
     // ====================================================================================================
     // EVENT LISTENERS
@@ -4322,16 +3888,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-	
-	if (recordVoiceBtn) {
-		recordVoiceBtn.addEventListener('click', () => {
-			if (isRecording) {
-				stopRecording();
-			} else {
-				startRecording();
-			}
-		});
-	}
+    
+    if (recordVoiceBtn) {
+        recordVoiceBtn.addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+    }
     
     if (startNewChatBtn) startNewChatBtn.addEventListener('click', () => {
         if (searchUserInput) searchUserInput.value = ''; // Clear previous search input
@@ -4542,5 +4108,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Testing unban notification...");
         hideBannedNotification();
     }
-
 });

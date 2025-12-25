@@ -421,6 +421,11 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Notifications enabled');
     }
 
+    if (!enableBtn) {
+        console.error('Enable notification button not found');
+        return;
+    }
+
     // ====================================================================================================
     // IN-APP NOTIFICATION SYSTEM
     // ====================================================================================================
@@ -4107,4 +4112,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Testing unban notification...");
         hideBannedNotification();
     }
+
 });

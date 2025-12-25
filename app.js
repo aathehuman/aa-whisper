@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const showLogin = document.getElementById('show-login');
     const resetPasswordBtn = document.getElementById('reset-password-btn');
     const logoutBtn = document.getElementById('logout-btn');
+    const enableBtn = document.getElementById('enable-notification-btn');
     const roomList = document.getElementById('room-list');
     const newRoomName = document.getElementById('new-room-name');
     const userList = document.getElementById('user-list');
@@ -411,6 +412,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(err => {
                 console.error('SW registration failed', err);
             });
+    }
+
+    async function enableNotifications() {
+        const perm = await Notification.requestPermission();
+        if (perm !== 'granted') return;
+
+        console.log('Notifications enabled');
     }
 
     // ====================================================================================================
@@ -3797,6 +3805,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (signupBtn) signupBtn.addEventListener('click', signUp);
     if (setUsernameBtn) setUsernameBtn.addEventListener('click', setUsername);
     if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+    // Notification button
+    enableBtn.addEventListener('click', async () => {
+        const permission = await Notification.requestPermission();
+
+        if (permission === 'granted') {
+            log('🔔 Notifications enabled', 0, 'admin');
+        } else {
+            log('🔕 Notifications denied', 0, 'admin');
+        }
+    });
     
     // Allow Enter key to login from password field
     if (passwordInput) passwordInput.addEventListener('keypress', function(e) {

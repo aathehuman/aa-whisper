@@ -1,7 +1,6 @@
 // =====================================================================================================================================================================
 // aa-whisper
-// =====================================================================================================================================================================
-// Made by aa using ai
+// made by aa using ai
 // =====================================================================================================================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -53,18 +52,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set auth persistence
     auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => {
-            console.log("📎✔️ Auth persistence set to LOCAL.");
+            console.log("📎✔️ auth persistence set to local.");
         })
         .catch((error) => {
-            console.error("📎❌ Error setting auth persistence:", error);
+            console.error("📎❌ error setting auth persistence:", error);
         });
 
     // ====================================================================================================
     // GLOBAL VARIABLES AND STATE MANAGEMENT
     // ====================================================================================================
-    
-    console.log("%c welcome to whisper! ", 'font-size: 30px; background: linear-gradient(135deg, #1a1a2e, #32264a); border: 1px solid #fff; border-radius: 30px; font-weight: 1000;');
-    
+
+    console.log("%c welcome to whisper! ", 'font-size: 30px; font-color: white; background: linear-gradient(135deg, #1a1a2e, #32264a); border: 1px solid #fff; border-radius: 30px; font-weight: 1000;');
+
     // DOM elements
     const authContainer = document.getElementById('auth-container');
     const appMain = document.getElementById('app-main');
@@ -138,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // State variables
     let currentUser = null;
+    let adminConfirmedShown = false;
     let currentRoom = 'general';
     let isTyping = false;
     let typingTimer = null;
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================================================================================
     
     // Structured logging helper with optional color-coding
-    function log(message, level = 0, feature = null) {
+    function log(message, level = 0, feature = null, ...data) {
         const indent = '    '.repeat(level);
         let color = 'inherit'; // default color
         let borderLeft = 'transparent'; // default border
@@ -194,7 +194,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Use %c for styling in the console
-        console.log(`%c${indent}${message}`, `color: ${color}; font-weight: bold; border-left: 3px solid ${borderLeft}; padding-left: 5px;`);
+        console.log(
+            `%c${indent}${message}`,
+            `color:${color}; font-weight:bold; border-left:3px solid ${borderLeft}; padding-left:5px;`,
+            ...data
+        );
     }
     
     // Sound effect for new messages when tab is inactive
@@ -357,8 +361,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function refreshUsersList() {
         try {
-            log("👥📋 Refreshing users list...", 0);
-            
             // Show loading state
             const refreshBtn = document.getElementById('refresh-admin-users-btn');
             if (refreshBtn) {
@@ -375,8 +377,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             notifications.success("users list refreshed, bro.", 'success', 3000);
         } catch (error) {
-            console.error("👥📋❌ Error refreshing users list:", error);
-            notifications.error("couldn't refresh users list, bro.", 'error', 5000);
+            console.error("👥📋❌ error refreshing users list:", error);
+            notifications.error("couldn't refresh users list, bro. check the console.", 'error', 5000);
         } finally {
             // Reset loading state
             const refreshBtn = document.getElementById('refresh-admin-users-btn');
@@ -397,6 +399,20 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
     
+    // ====================================================================================================
+    // PUSH NOTIFICATION SETUP
+    // ====================================================================================================
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => {
+                console.log('SW registered', reg.scope);
+            })
+            .catch(err => {
+                console.error('SW registration failed', err);
+            });
+    }
+
     // ====================================================================================================
     // IN-APP NOTIFICATION SYSTEM
     // ====================================================================================================
@@ -511,8 +527,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================================================================================
     
     function showBannedNotification(reason) {
-        console.log("👥🚫 showBannedNotification called with reason:", reason);
-        
         const notification = document.getElementById('banned-notification');
         const reasonText = document.getElementById('ban-reason-text');
         const messageInput = document.getElementById('message-input');
@@ -523,11 +537,11 @@ document.addEventListener('DOMContentLoaded', function() {
             notification.classList.add('show');
             notification.classList.add('animated-bg'); 
             if (reason && reasonText) {
-                reasonText.textContent = `Reason: ${reason}`;
+                reasonText.textContent = `reason: ${reason}`;
             }
-            console.log("👥🚫✅ Notification element made visible.");
+            log("👥🚫✅ user is banned: notification element shown.", 0, 'ban');
         } else {
-            console.error("👥🚫❌ Banned notification element not found.");
+            console.error("👥🚫❌ banned notification element not found");
         }
 
         if (messageInput) messageInput.disabled = true;
@@ -540,8 +554,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function hideBannedNotification() {
-        console.log("👥✔️ hideBannedNotification called");
-        
         const notification = document.getElementById('banned-notification');
         const messageInput = document.getElementById('message-input');
         const sendBtn = document.getElementById('send-btn');
@@ -550,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
             notification.style.display = 'none'; // Force display to none
             notification.classList.remove('show');
             notification.classList.remove('animated-bg'); 
-            console.log("👥✔️✅ Notification element hidden");
+            log("👥✔️✅ user not banned: notification element hidden.", 1, 'ban');
         }
 
         if (messageInput) messageInput.disabled = false;
@@ -569,7 +581,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const banSnapshot = await database.ref('bannedUsers/' + currentUser.uid).once('value');
             return banSnapshot.exists();
         } catch (error) {
-            console.error("👥🚫❔ Error checking ban status:", error);
+            console.error("👥🚫❔❌ error checking ban status:", error);
             return false;
         }
     }
@@ -580,81 +592,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load role data (leaders and admins)
     async function loadRoleData() {
-        log("👤👮/👑❔ Loading role data...", bannedUsers, 0, 'admin');
-        
-        // 1. Initial check: if no user, do nothing.
+        // 1. Initial check
         if (!currentUser) {
-            console.log("👤👮❎ No user to load role data for. Exiting.");
             return;
         }
 
-        // 2. CRITICAL: Reset state to prevent bleed-over from previous sessions.
+        // 2. Reset state to prevent bleed-over from previous sessions.
         window.leaderIds = null;
         adminUsers = {};
         bannedUsers = {};
 
-        // 3. Load Leaders Data: This is a public read and should always succeed.
+        // 3. Load Leaders Data
         try {
             const leadersSnapshot = await database.ref('roles/leaders').once('value');
             window.leaderIds = leadersSnapshot.val() || {};
-            log("ℹ️ Loaded leader IDs:", window.leaderIds, 1, 'admin');
         } catch (error) {
-            console.error("👤👮❎ Error loading leader IDs:", error, 0, 'admin');
+            console.error("❎ error loading leaders:", error);
             // Even if this fails, we can continue. The app will just behave as if there are no leaders.
             window.leaderIds = {};
         }
 
-        // 4. Load Admin Data: This is now a public read for any authenticated user.
+        // 4. Load Admin Data
         try {
             const adminSnapshot = await database.ref('adminUsers').once('value');
             adminUsers = adminSnapshot.val() || {};
-            log("ℹ️ Loaded admin users:", adminUsers, 1, 'admin');
         } catch (error) {
-            console.error("👤👮❎ Error loading admin users:", error);
+            console.error("❎ error loading admins:", error);
             // If this fails, adminUsers remains an empty object, which is a safe default.
         }
 
-        // 5. Load Banned Data: This is the only part that should be restricted.
-        // Only admins or leaders need to see the full ban list for the admin panel.
+        // 5. Load Banned Data
         const isAdmin = adminUsers[currentUser.uid];
         const isLeader = isCurrentUserLeader();
 
         if (isAdmin || isLeader) {
-            console.log("👤👮ℹ️ 👤=👮/👑 User is admin or leader: loading banned users for admin panel.");
             try {
                 const bannedSnapshot = await database.ref('bannedUsers').once('value');
                 bannedUsers = bannedSnapshot.val() || {};
-                log("ℹ️ 👤🚫✔️ Loaded banned users:", bannedUsers, 2, 'admin');
             } catch (bannedError) {
-                console.error("👤👮❎ 👤🚫❌ Error loading banned users:", bannedError);
+                console.error("👤🚫 ❌ error loading banned users:", bannedError);
                 if (bannedError.code === 'PERMISSION_DENIED') {
-                    notifications.warning("Permission denied accessing banned users. Your Firebase security rules may need updating.", 'Security Rules Warning', 5000);
+                    notifications.warning("u don't got permissions to see banned users, bro.", 'nuh uh', 5000);
                 }
                 bannedUsers = {}; // Default to empty on failure.
             }
-        } else {
-            console.log("👤👮ℹ️ 👤≠👮/👑 User is not admin or leader. Skipping full ban list load.", 1, 'admin');
         }
 
-        log("✅ Leader IDs:", window.leaderIds, 1, 'admin');
-        log("✅ Admin users:", adminUsers, 1, 'admin');
-        log("✅ Banned users:", bannedUsers, 1, 'admin');
+        log("👑 leaders:", 0, 'admin', window.leaderIds);
+        log("👮 admins:", 0, 'admin', adminUsers);
+        log("🚫 banned users:", 0, 'admin', bannedUsers);
     }
 
     // Update UI based on user role
     function updateUserRoleUI() {
-        log("👤👮🔄️ Starting to refresh user roles...", 0, 'admin');
-        log("ℹ️ Refreshing user role UI: Current user ID:", currentUser.uid, 1, 'admin');
-        log("ℹ️ Refreshing user role UI: Admin users:", adminUsers, 1, 'admin');
-        log("ℹ️ Refreshing user role UI: Leader IDs:", window.leaderIds, 1, 'admin');
+        log("ℹ️ current user:", 0, 'admin', currentUser.uid);
+        log("ℹ️ admins:", 0, 'admin', adminUsers);
+        log("ℹ️ leaders:", 0, 'admin', window.leaderIds);
         
         // Remove all role classes first
         document.body.classList.remove('is-leader', 'is-admin');
         
         if (window.leaderIds && window.leaderIds[currentUser.uid]) {
-            log("👤=👑 Setting user as LEADER", 2, 'admin');
             document.body.classList.add('is-leader');
-            document.body.classList.add('is-admin'); // Leader is also an admin
+            document.body.classList.add('is-admin');
             
             if (adminPanel) {
                 adminPanel.style.display = 'block';
@@ -670,7 +670,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
         } else if (adminUsers[currentUser.uid]) {
-            log("👤=👮 Setting user as ADMIN", 2, 'admin');
             document.body.classList.add('is-admin');
             
             if (adminPanel) {
@@ -686,9 +685,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            notifications.success('admin privileges confirmed!', 'Authentication', 4000);
+            if (!adminConfirmedShown && isAdmin) {
+                notifications.success('admin privileges confirmed, bro.', 'welcome back', '4000');
+                adminConfirmedShown = true;
+            }
+
         } else {
-            log("👤≠👮/👑 Setting user as REGULAR", 2, 'admin');
             // Regular user
             if (adminPanel) {
                 adminPanel.style.display = 'none';
@@ -712,18 +714,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const user = allUsers[userId];
         const userInfoDiv = document.getElementById('admin-user-info');
         
-        if (!userInfoDiv) return; // Added: Null check
+        if (!userInfoDiv) return;
         
         // Update user information
-        document.getElementById('info-display-name').textContent = user.displayName || 'Unknown';
-        document.getElementById('info-user-type').textContent = user.isGuest ? 'Guest' : 'Registered';
+        document.getElementById('info-display-name').textContent = user.displayName || 'unknown';
+        document.getElementById('info-user-type').textContent = user.isGuest ? 'guest' : 'registered';
         
         // Status
-        let status = 'Active';
+        let status = 'active';
         if (bannedUsers[userId]) {
-            status = 'Banned';
+            status = 'banned';
         } else if (user.disabled) {
-            status = 'Disabled';
+            status = 'disabled';
         }
         document.getElementById('info-status').textContent = status;
         
@@ -732,7 +734,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const lastSeenDate = new Date(user.lastSeen);
             document.getElementById('info-last-seen').textContent = lastSeenDate.toLocaleString();
         } else {
-            document.getElementById('info-last-seen').textContent = 'Unknown';
+            document.getElementById('info-last-seen').textContent = 'unknown';
         }
         
         userInfoDiv.style.display = 'block';
@@ -750,7 +752,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!modal || !titleElement || !messageElement || !detailsElement || 
             !confirmBtn || !cancelBtn || !closeBtn) {
-            console.error("📦👍/👎❌ Missing modal elements");
+            console.error("📦❌ missing modal elements");
             return;
         }
         
@@ -808,7 +810,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ban a user (Admin and Leader can do this)
     function banUser() {
         if (!isCurrentUserAdmin() && !isCurrentUserLeader()) {
-            notifications.error("u ain't allowed to do that, bro.", 'access denied', '6000');
+            notifications.error("u can't do that, bro.", 'nuh uh', '6000');
             return;
         }
         
@@ -816,23 +818,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const reason = adminReasonInput.value.trim();
         
         if (!userId) {
-            notifications.warning('u gotta choose a user to ban, bro.', 'action required', '5000');
+            notifications.warning('u gotta choose a user, bro.', 'action required', '5000');
             return;
         }
         
         if (!reason) {
-            notifications.warning('u gotta provide a reason for the ban, bro.', 'action required', '5000');
+            notifications.warning('u gotta give a reason, bro.', 'action required', '5000');
             return;
         }
         
         // Cannot ban yourself or other admins/leader
         if (userId === currentUser.uid) {
-            notifications.error("u can't ban yourself, bro.", 'not allowed', '6000');
+            notifications.error("u can't ban yourself, bro.", 'what??', '6000');
             return;
         }
         
         if (adminUsers[userId] || (window.leaderIds && window.leaderIds[userId])) {
-            notifications.error("u can't ban an admin or leader, bro.", 'not allowed', '6000');
+            notifications.error("u can't ban another admin or leader, bro.", 'nuh uh', '6000');
             return;
         }
         
@@ -854,13 +856,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadContactsList();
                 
                 // Show success message
-                notifications.success(`'${allUsers[userId]?.displayName || 'Unknown'}' is now banned, bro.`, 'success', '4000');
+                notifications.success(`u just banned '${allUsers[userId]?.displayName || 'someone'}', bro.`, 'done', '4000');
                 
                 // Clear form
                 adminReasonInput.value = '';
             })
             .catch(error => {
-                console.error("👤🚫 ❌ Error banning user:", error);
+                console.error("👤🚫 ❌ error banning user:", error);
                 notifications.error("couldn't ban that user, bro. try again.", 'error', '6000');
             });
     }
@@ -868,12 +870,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Unban a user
     function unbanUser(userId) {
         if (!isCurrentUserAdmin() && !isCurrentUserLeader()) {
-            notifications.error("u ain't allowed to do that, bro.", 'access denied', '6000');
+            notifications.error("u can't do that, bro.", 'nuh uh', '6000');
             return;
         }
         
         if (!userId) {
-            notifications.warning('u gotta select a user to unban, bro.', 'action required', '5000');
+            notifications.warning('u gotta select a user, bro.', 'action required', '5000');
             return;
         }
         
@@ -893,10 +895,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadContactsList();
                 
                 // Show success message
-                notifications.success(`'${allUsers[userId]?.displayName || 'Unknown'}' is now unbanned, bro.`, 'user unbanned', '4000');
+                notifications.success(`u just unbanned '${allUsers[userId]?.displayName || 'someone'}', bro.`, 'user unbanned', '4000');
             })
             .catch(error => {
-                console.error("👤✔️ ❌ Error unbanning user:", error);
+                console.error("👤✔️ ❌ error unbanning user:", error);
                 notifications.error("couldn't unban that user, bro. try again.", 'error', '6000');
             });
     }
@@ -904,19 +906,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Grant admin privileges (Leader only)
     function grantAdmin() {
         if (!isCurrentUserLeader()) {
-            notifications.error('only leaders can grant admin privileges, bro.', 'access denied', '6000');
+            notifications.error("u can't do that, bro.", 'nuh uh', '6000');
             return;
         }
         
         const userId = adminUserSelect.value;
         
         if (!userId) {
-            notifications.warning('u gotta select a user to grant admin privileges, bro.', 'action required', '5000');
+            notifications.warning('u gotta select a user, bro.', 'action required', '5000');
             return;
         }
         
         if (adminUsers[userId]) {
-            notifications.error('that user already has admin privileges, bro.', 'already admin', '6000');
+            notifications.error('that user already got admin privileges, bro.', 'already admin', '6000');
             return;
         }
         
@@ -931,7 +933,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadContactsList();
                 
                 // Show success message
-                notifications.success("admin privileges granted to '${allUsers[userId]?.displayName || 'Unknown'}', bro.", 'admin granted', '4000');
+                notifications.success(`u just made ''${allUsers[userId]?.displayName || 'someone'}'' admin, bro.`, 'done', '4000');
             })
             .catch(error => {
                 console.error("👤➡️👮 ❌ Error granting admin:", error);
@@ -942,14 +944,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Revoke admin privileges (Leader only)
     function revokeAdmin() {
         if (!isCurrentUserLeader()) {
-            notifications.error('👮➡️👤 ❎ 👤≠👑 only leaders can revoke admin privileges, bro.', 'access denied', '6000');
+            notifications.error('👮➡️👤 ❎ 👤≠👑 only leaders can do that, bro.', 'nuh uh', '6000');
             return;
         }
         
         const userId = adminUserSelect.value;
         
         if (!userId) {
-            notifications.warning('u gotta select a user to revoke admin privileges from, bro.', 'action required', '5000');
+            notifications.warning('u gotta select a user, bro.', 'action required', '5000');
             return;
         }
         
@@ -960,7 +962,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Cannot revoke admin from yourself if you're the leader
         if (userId === currentUser.uid) {
-            notifications.error('why u tryna revoke ur own admin bro.', 'not allowed', '6000');
+            notifications.error('why u tryna revoke ur own admin bro.', 'hell nah', '6000');
             return;
         }
         
@@ -975,11 +977,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadContactsList();
                 
                 // Show success message
-                notifications.success(`admin privileges revoked from '${allUsers[userId]?.displayName || 'Unknown User'}', bro.`, 'admin revoked', '4000');
+                notifications.success(`u just took off admin from '${allUsers[userId]?.displayName || 'someone'}', bro.`, 'done', '4000');
             })
             .catch(error => {
                 console.error("👮➡️👤 ❌ Error revoking admin:", error);
-                notifications.error("couldn't revoke admin privileges, bro. try again.", 'Error', '6000');
+                notifications.error("couldn't revoke admin, bro. try again.", 'error', '6000');
             });
     }
 
@@ -1047,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function switchAuthTab(tab) {
         if (!guestTab || !accountTab || !guestPanel || !accountPanel || 
             !signupPanel || !usernamePanel) {
-            console.error("🗂️ ❌ Missing auth tab elements");
+            console.error("🗂️❌ missing auth tab elements");
             return;
         }
         
@@ -1070,7 +1072,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function switchAuthPanel(panel) {
         if (!guestPanel || !accountPanel || !signupPanel || !usernamePanel) {
-            console.error("🗂 ❌ Missing auth panel elements");
+            console.error("🗂❌ Missing auth panel elements");
             return;
         }
         
@@ -1094,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function loginAsGuest() {
         const username = guestUsername.value.trim();
         if (!username) {
-            notifications.error('u gotta enter a username , bro.', 'action required', '6000');
+            notifications.error('u gotta enter a username, mate.', 'action required', '6000');
             return;
         }
         
@@ -1107,7 +1109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(snapshot => {
                 if (snapshot.exists()) {
                     // Name is taken, show error and stop
-                    notifications.error(`"${username}" is taken, bro. choose another.`, 'error', '6000');
+                    notifications.error(`'${username}' is taken, mate. choose another.`, 'error', '6000');
                     setButtonLoading(guestLoginBtn, false);
                     return Promise.reject(new Error('Username taken'));
                 }
@@ -1117,7 +1119,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(userCredential => {
                 currentUser = userCredential.user;
-                console.log("👤🤨 ✅ Guest signed in successfully");
+                log("👤🤨 ✅ guest signed in", 0, 'auth');
                 
                 // Save the guest's data to the database
                 return database.ref('users/' + currentUser.uid).set({
@@ -1137,7 +1139,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 setupUser();
             })
             .catch(error => {
-                console.error("couldn't sign u in as guest bro. error:", error);
+                console.error("couldn't sign u in as guest bro:", error);
                 if (error.message !== 'Username taken') {
                     notifications.error(error.message);
                 }
@@ -1165,10 +1167,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     return currentUser.reload();
                 })
                 .then(() => {
-                    console.log("Email user signed in:", currentUser);
+                    log("👤📧 ✅ email user signed in:", 0, 'auth', currentUser);
                     
                     // Check if user has a display name
                     if (!currentUser.displayName || currentUser.displayName === '') {
+                        // Show username selection panel
+                        switchAuthPanel('username');
+                    } else if (!currentUser.displayName || currentUser.displayName === 'User') {
                         // Show username selection panel
                         switchAuthPanel('username');
                     } else {
@@ -1180,7 +1185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateVerificationUI();
                 })
                 .catch(error => {
-                    console.error("📧➡️ ❌ Error signing in:", error);
+                    console.error("📧➡️ ❌ error signing in:", error);
                     
                     // Custom error messages for common issues
                     let specificMessage = "";
@@ -1207,7 +1212,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     // Debug the actual error code
-                    console.log("📧➡️ ❌ Error code:", error.code);
+                    console.log("📧➡️ ❌ error code:", error.code);
                 })
                 .finally(() => {
                     // Loading animation END
@@ -1339,7 +1344,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     setupUser();
                 })
                 .catch(error => {
-                    console.error("👤📛 ❌ Set username failed. Error:", error);
+                    console.error("❌ set username failed:", error);
                     notifications.error("couldn't set that username for u, bro. check the console for details.", "that didn't work", '6000');
                 })
                 .finally(() => {
@@ -1347,7 +1352,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     setButtonLoading(setUsernameBtn, false);
                 });
         } else {
-            notifications.warning('u gotta enter a username, mate.');
+            notifications.warning('u gotta enter a username, mate.', 'cmon bro aint noone that dumb', 5000);
         }
     }
 
@@ -1359,12 +1364,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Validate inputs
         if (!email || !password || !name) {
-            notifications.error('Please fill all fields', 'Validation Error', 3000);
+            notifications.error('u gotta fill all fields, mate.', 'cmon bro aint noone that dumb', 4000);
             return;
         }
         
         if (password.length < 6) {
-            notifications.error('Password must be at least 6 characters', 'Validation Error', 3000);
+            notifications.error('ur passwords gotta be at least 6 characters, mate.', 'fix up bruh', 4000);
             return;
         }
         
@@ -1385,7 +1390,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(() => {
                     // Save user data to database
-                    const displayName = currentUser.displayName || 'New User';
+                    const displayName = currentUser.displayName || 'new user';
                     return database.ref('users/' + currentUser.uid).set({
                         displayName: displayName,
                         displayName_lower: displayName.toLowerCase(),
@@ -1400,7 +1405,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(() => {
                     // Show verification message
-                    notifications.success('thanks for joining whisper, bro! make sure u verify ur email to send messages. u might have to check ur spam folder too.', 'thanks!', '10000');
+                    notifications.success('make sure u verify ur email to send messages. u might have to check ur spam folder too.', 'thanks for joining whisper, bro.', '15000');
                     
                     // Set up user
                     setupUser();
@@ -1414,7 +1419,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     setButtonLoading(signupBtn, false);
                 });
         } else {
-            notifications.warning('u gotta fill all fields, mate.');
+            notifications.warning('u gotta fill all fields, mate.', 'cmon bro aint noone that dumb', 5000);
         }
     }
 
@@ -1423,7 +1428,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = emailInput.value.trim();
         
         if (!email) {
-            notifications.warning('u gotta enter your email address first, bro.');
+            notifications.warning('u gotta enter your email address first, mate.', 'yh idk how else to do this', '5000');
             return;
         }
 
@@ -1434,7 +1439,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         auth.sendPasswordResetEmail(email)
             .then(() => {
-                notifications.success('password reset email sent, bro! check your email. try looking in your spam folder too.', 'done', '10000');
+                notifications.success('check your emails. try looking in your spam folder too.', 'password reset email sent, mate.', '15000');
             })
             .catch(error => {
                 console.error(" error:", error);
@@ -1448,7 +1453,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function logout() {
-        log("...⬅️🚗🚪 ℹ️ Logging out..", 0, 'auth');
+        log("bye ig", 0, 'auth');
         
         // Detach all database listeners FIRST
         database.ref().off();
@@ -1472,15 +1477,13 @@ document.addEventListener('DOMContentLoaded', function() {
             database.ref('users').off('value', usersValueCallback);
             usersValueCallback = null;
         }
-    
-        log("✔️ All listeners have been detached.", 1, 'auth');
 
         // Sign out from Firebase
         if (currentUser) {
             auth.signOut().then(() => {
-                log("✔️ Firebase sign-out successful.", 1, 'auth');
+                log("✔️ firebase sign-out successful.", 1, 'auth');
             }).catch(error => {
-                console.error("⬅️🚗..🚪 ❌ Firebase sign-out failed:", error);
+                console.error("❌ firebase sign-out failed:", error);
             });
         }
         currentUser = null;
@@ -1516,7 +1519,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Force clear any remaining messages
         if (messages) messages.innerHTML = '';
-        log("✔️ Messages cleared", 1, 'auth');
         
         if (window.currentUserBanStatusRef) {
             window.currentUserBanStatusRef.off();
@@ -1551,7 +1553,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 50);
         
-        log("🚗⬅️...🚪✅ Logout successful!", 0, 'auth');
+        log("bro got out 💀", 0, 'auth');
     }
 
     // ====================================================================================================
@@ -1561,7 +1563,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup user after authentication
     async function setupUser() {
         try {
-            log("👤⚙️ ℹ️ Setting up user..", 0, 'user');
+            log("egu khe", 0, 'user');
             
             // --- 1. SET DEFAULT STATE ---
             currentRoom = 'general';
@@ -1591,8 +1593,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadingOverlay.style.display = 'flex';
             }
             
-            log("✔️ UI/states set", 1, 'user');
-
             // --- 3. DATABASE & LISTENER SETUP ---
             const userRef = database.ref('users/' + currentUser.uid);
             
@@ -1610,51 +1610,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 lastSeen: firebase.database.ServerValue.TIMESTAMP
             });
             
-            log("✔️ Database and listeners loaded", 1, 'user');
-
             // --- 4. LOAD ROLE DATA ---
-            try {
-                log("ℹ️ Waiting to load role data...", 1, 'user');
-                
+            try {                
                 // Load all role data and wait for it to complete
                 await loadRoleData();
-                
-                log("✔️ Role data loaded successfully", 2, 'user');
-                log("✔️ Leader IDs:", window.leaderIds, 3, 'user');
-                log("✔️ Admin users:", adminUsers, 3, 'user');
-                log("✔️ Banned users:", bannedUsers, 3, 'user');
-                
             } catch (error) {
-                console.error("❌ Error loading role data:", error, 1, 'auth');
+                console.error("❌ error loading role data:", error, 1, 'auth');
             }
 
             // --- 5. LOAD USERS DATA ---
             // Load all users first before proceeding
             await loadUsers();
             setupUsersListener();
-            log("✔️ Users loaded.", 1, 'user');
+            log("✔️ users loaded.", 1, 'user');
 
             // --- 6. CHECK BAN STATUS ---
             try {
-                log("ℹ️ Checking ban status for user:", currentUser.uid, 1, 'ban');
                 const banSnapshot = await database.ref('bannedUsers/' + currentUser.uid).once('value');
                 if (banSnapshot.exists()) {
                     const banData = banSnapshot.val();
-                    log("ℹ️ 👤🚫 User is banned. Reason:", banData.reason, 2, 'ban');
-                    showBannedNotification(banData.reason || 'No reason provided.');
+                    log("ℹ🚫 bros banned, hell nah. reason:", banData.reason, 2, 'ban');
+                    showBannedNotification(banData.reason || 'idk bruh ask chatgpt');
                 } else {
-                    log("ℹ️ 👤✔️ User is not banned.", 2, 'ban');
+                    log("ℹ✔️ bro aint banned. lets goo.", 2, 'ban');
                     hideBannedNotification();
                 }
             } catch (banError) {
-                console.error("❌ Error checking ban status:", banError);
+                console.error("❌ error checking ban status:", banError);
                 hideBannedNotification();
             }
 
             // --- 7. SET UP REAL-TIME LISTENERS ---
             
-            log("ℹ️ Setting up listeners", 1, 'user');
-
             // Listen for changes to the current user's ban status
             const banStatusRef = database.ref('bannedUsers/' + currentUser.uid);
             banStatusRef.on('value', (snapshot) => {
@@ -2369,13 +2356,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load users
     function loadUsers() {
-        console.log("👥📋 Loading users - Creating a new, clean slate.");
         return new Promise((resolve, reject) => {
             const usersRef = database.ref('users');
             
-            usersRef.once('value').then(snapshot => {
-                console.log("👥📋 Received snapshot from Firebase.");
-                
+            usersRef.once('value').then(snapshot => {                
                 allUsers = {}; // Reset the object
                 snapshot.forEach(childSnapshot => {
                     const user = childSnapshot.val();
@@ -2383,8 +2367,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     allUsers[userId] = user; // Populate the object
                 });
                 
-                console.log("👥📋 All users loaded. allUsers object now contains:", allUsers);
-                console.table(allUsers);
                 resolve();
             }).catch(error => {
                 console.error("👥📋 Failed to load users:", error);
@@ -2407,8 +2389,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load contacts list
     function loadContactsList() {
-        console.log("👥📋 Loading contacts list. The allUsers object contains:", allUsers);
-
         if (!recentChatsList) return; // Safety check
 
         recentChatsList.innerHTML = '';

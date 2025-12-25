@@ -3266,7 +3266,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         message.username || message.senderName || 'new message yo',
                         {
                             body: message.text || 'get here bro',
-                            icon: '/favicon-16x16.png' // optional
+                            icon: '/android-chrome-192x192.png' // optional
                         }
                     );
                 }
@@ -4125,4 +4125,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Testing unban notification...");
         hideBannedNotification();
     }
+
 });

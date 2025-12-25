@@ -2397,130 +2397,115 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load contacts list
     function loadContactsList() {
-        if (!recentChatsList) return; // Safety check
+    if (!recentChatsList) return;
 
-        recentChatsList.innerHTML = '';
+    recentChatsList.innerHTML = '';
 
-        const now = Date.now();
-        const twoMinutesAgo = now - (2 * 60 * 1000);
-        const usersToShow = [];
+    const now = Date.now();
+    const twoMinutesAgo = now - (2 * 60 * 1000);
+    const usersToShow = [];
 
-        // Combine recent chats and all users into one list
-        const allContactIds = new Set([...recentChats, ...Object.keys(allUsers)]);
+    const allContactIds = new Set([
+        ...recentChats,
+        ...Object.keys(allUsers)
+    ]);
 
-        allContactIds.forEach(userId => {
-            if (userId === currentUser.uid) return; // Don't add yourself
-            if (isUserBanned(userId)) return; // Skip banned users
+    allContactIds.forEach(userId => {
+        if (userId === currentUser.uid) return;
+        if (isUserBanned(userId)) return;
 
-            const user = allUsers[userId];
-            if (!user) return;
+        const user = allUsers[userId];
+        if (!user || typeof user !== 'object') return;
 
-            // Filter out old guests
-            if (user.isGuest && (!user.lastSeen || user.lastSeen < twoMinutesAgo)) {
-                return;
-            }
+        // 🔒 HARD GUARD — prevents localeCompare crash
+        if (typeof user.displayName !== 'string') return;
 
-            usersToShow.push({
-                userId: userId,
-                user: user,
-                isOnline: user.lastSeen && user.lastSeen > twoMinutesAgo,
-                isLeader: window.leaderIds && window.leaderIds[userId],
-                isAdmin: adminUsers[userId]
-            });
-        });
-
-        // Sorting logic: Leaders first, then online status, then alphabetically
-        usersToShow.sort((a, b) => {
-            // 1. Leaders always come first
-            if (a.isLeader && !b.isLeader) {
-                return -1; // a comes before b
-            }
-            if (!a.isLeader && b.isLeader) {
-                return 1; // b comes before a
-            }
-            
-            // 2. If both are leaders or both are not leaders, check online status
-            if (a.isOnline && !b.isOnline) {
-                return -1; // a comes before b
-            }
-            if (!a.isOnline && b.isOnline) {
-                return 1; // b comes before a
-            }
-            
-            // 3. If both have same leader/online status, sort alphabetically
-            return a.user.displayName.localeCompare(b.user.displayName);
-        });
-
-        if (usersToShow.length === 0) {
-            const emptyMessage = document.createElement('div');
-            emptyMessage.style.color = 'var(--text-secondary)';
-            emptyMessage.style.fontSize = '12px';
-            emptyMessage.style.padding = '10px';
-            emptyMessage.textContent = 'No contacts found.';
-            recentChatsList.appendChild(emptyMessage);
-            return;
+        if (user.isGuest && (!user.lastSeen || user.lastSeen < twoMinutesAgo)) {
+        return;
         }
 
-        // Build the UI from the sorted array
-        usersToShow.forEach(({ userId, user, isOnline, isLeader, isAdmin }) => {
-            const chatItem = document.createElement('div');
-            chatItem.classList.add('recent-chat-item');
-            chatItem.dataset.userId = userId;
-            
-            // Add gradient classes based on status
-            if (isOnline) {
-                chatItem.classList.add('online');
-            } else {
-                chatItem.classList.add('offline');
-            }
-            
-            // Add role-based gradient classes - prioritize leader over admin
-            if (isLeader) {
-                chatItem.classList.add('leader');
-            } else if (isAdmin) {
-                chatItem.classList.add('admin');
-            }
-            
-            // Highlight the active chat
-            if (privateChatUser && privateChatUser === userId) {
-                chatItem.classList.add('active');
-            }
-
-            const chatInfo = document.createElement('div');
-            chatInfo.classList.add('chat-info');
-
-            const chatName = document.createElement('div');
-            chatName.classList.add('chat-name');
-
-            // Build display text
-            let displayText = user.displayName || 'Unknown User';
-            if (user.isGuest) {
-                displayText += ' (Guest)';
-            }
-
-            // Add role indicators - prioritize leader over admin
-            if (!displayText.includes('👑') && window.leaderIds && window.leaderIds[userId]) {
-                displayText += ' 👑'; // Leaders get crown
-            } else if (!displayText.includes('⚡') && adminUsers[userId]) {
-                displayText += ' ⚡'; // Admins get lightning bolt
-            }
-
-            chatName.textContent = displayText;
-
-            chatInfo.appendChild(chatName);
-            chatItem.appendChild(chatInfo);
-
-            chatItem.addEventListener('click', () => {
-                startPrivateChat(userId);
-                // Close mobile sidebar after selecting chat
-                if (window.innerWidth <= 480 && sidebar) {
-                    sidebar.classList.remove('open');
-                }
-            });
-
-            recentChatsList.appendChild(chatItem);
+        usersToShow.push({
+        userId,
+        user,
+        displayName: user.displayName,
+        displayNameLower: (user.displayName_lower || user.displayName).toLowerCase(),
+        isOnline: user.lastSeen && user.lastSeen > twoMinutesAgo,
+        isLeader: !!(window.leaderIds && window.leaderIds[userId]),
+        isAdmin: !!adminUsers[userId]
         });
+    });
+
+    // ✅ SAFE SORT
+    usersToShow.sort((a, b) => {
+        // 1. Leaders first
+        if (a.isLeader !== b.isLeader) {
+        return a.isLeader ? -1 : 1;
+        }
+
+        // 2. Online users next
+        if (a.isOnline !== b.isOnline) {
+        return a.isOnline ? -1 : 1;
+        }
+
+        // 3. Alphabetical (always safe now)
+        return a.displayNameLower.localeCompare(b.displayNameLower);
+    });
+
+    if (usersToShow.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.style.color = 'var(--text-secondary)';
+        emptyMessage.style.fontSize = '12px';
+        emptyMessage.style.padding = '10px';
+        emptyMessage.textContent = 'No contacts found.';
+        recentChatsList.appendChild(emptyMessage);
+        return;
     }
+
+    usersToShow.forEach(({ userId, user, isOnline, isLeader, isAdmin }) => {
+        const chatItem = document.createElement('div');
+        chatItem.classList.add('recent-chat-item');
+        chatItem.dataset.userId = userId;
+
+        chatItem.classList.add(isOnline ? 'online' : 'offline');
+
+        if (isLeader) {
+        chatItem.classList.add('leader');
+        } else if (isAdmin) {
+        chatItem.classList.add('admin');
+        }
+
+        if (privateChatUser === userId) {
+        chatItem.classList.add('active');
+        }
+
+        const chatInfo = document.createElement('div');
+        chatInfo.classList.add('chat-info');
+
+        const chatName = document.createElement('div');
+        chatName.classList.add('chat-name');
+
+        let displayText = user.displayName;
+        if (user.isGuest) displayText += ' (Guest)';
+
+        if (isLeader) displayText += ' 👑';
+        else if (isAdmin) displayText += ' ⚡';
+
+        chatName.textContent = displayText;
+
+        chatInfo.appendChild(chatName);
+        chatItem.appendChild(chatInfo);
+
+        chatItem.addEventListener('click', () => {
+        startPrivateChat(userId);
+        if (window.innerWidth <= 480 && sidebar) {
+            sidebar.classList.remove('open');
+        }
+        });
+
+        recentChatsList.appendChild(chatItem);
+    });
+    }
+
 
     // Search for users
     function searchForUsers(searchTerm) {
@@ -3266,7 +3251,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         message.username || message.senderName || 'new message yo',
                         {
                             body: message.text || 'get here bro',
-                            icon: '/android-chrome-192x192.png' // optional
+                            icon: '/favicon-16x16.png' // optional
                         }
                     );
                 }
@@ -4125,5 +4110,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Testing unban notification...");
         hideBannedNotification();
     }
-
 });

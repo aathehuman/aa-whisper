@@ -3255,6 +3255,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadingContainer.style.display = 'none';
                 }
                 displayMessage(message);
+
+                // Show notification if tab is inactive and message is from another user
+                if (
+                    Notification.permission === 'granted' &&
+                    message.senderId !== currentUser.uid &&
+                    document.hidden
+                ) {
+                    new Notification(
+                        message.username || message.senderName || 'new message yo',
+                        {
+                            body: message.text || 'get here bro',
+                            icon: '/favicon-16x16.png' // optional
+                        }
+                    );
+                }
             }
         );
     }

@@ -421,11 +421,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Notifications enabled');
     }
 
-    if (!enableBtn) {
-        console.error('Enable notification button not found');
-        return;
-    }
-
     // ====================================================================================================
     // IN-APP NOTIFICATION SYSTEM
     // ====================================================================================================
@@ -3812,7 +3807,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (logoutBtn) logoutBtn.addEventListener('click', logout);
 
     // Notification button
-    enableBtn.addEventListener('click', async () => {
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('#enable-notification-btn');
+        if (!btn) return;
+
         const permission = await Notification.requestPermission();
 
         if (permission === 'granted') {
@@ -4112,5 +4110,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Testing unban notification...");
         hideBannedNotification();
     }
-
 });

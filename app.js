@@ -1,3 +1,4 @@
+
 // =====================================================================================================================================================================
 // aa-whisper
 // made by aa using ai
@@ -114,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchResults = document.getElementById('search-results');
     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
     const sidebar = document.getElementById('sidebar');
+    const loadingOverlay = document.getElementById("loadingOverlay");
     
     // Admin-specific DOM elements
     const adminPanel = document.getElementById('admin-section');
@@ -173,25 +175,29 @@ document.addEventListener('DOMContentLoaded', function() {
         let borderLeft = 'transparent'; // default border
         
         // Assign colors based on feature
+        if (feature === 'app') {
+            color = '#bb86fc'; 
+            borderLeft = '#bb86fc', '3px'; // Signature Purple
+        }
         if (feature === 'auth') {
-            color = '#3498db'; 
-            borderLeft = '#3498db', '3px'; // Blue
+            color = '#309b2cff'; 
+            borderLeft = '#309b2cff', '3px'; // Green
         }
         if (feature === 'admin') {
-            color = '#9b59b6'; 
-            borderLeft = '#9b59b6', '3px'; // Purple
+            color = '#308eb9ff'; 
+            borderLeft = '#308eb9ff', '3px'; // Blue
         }
         if (feature === 'message') {
-            color = '#2ecc71'; 
-            borderLeft = '#2ecc71', '3px'; // Green
+            color = '#c1cc2eff'; 
+            borderLeft = '#c1cc2eff', '3px'; // Yellow
         }
         if (feature === 'ban') {
             color = '#e74c3c'; 
             borderLeft = '#e74c3c', '3px'; // Red
         }
         if (feature === 'user') {
-            color = '#f39c12'; 
-            borderLeft = '#f39c12', '3px'; // Orange
+            color = '#ce8716ff'; 
+            borderLeft = '#ce8716ff', '3px'; // Orange
         }
         
         // Use %c for styling in the console
@@ -399,18 +405,67 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
+
+    // ====================================================================================================
+    // AI BOT CONFIGURATION (Dr. Zakir Naik)
+    // ====================================================================================================
+    const AI_BOT_ID = 'zakir_bot_v1';
+    const AI_BOT_NAME = 'dr zakir naik'; 
+
+    const GROQ_API_KEY = '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'; 
+
+    async function getAIResponse(userText) {
+        try {
+            const systemPrompt = `You are a helpful AI named Dr. Zakir Naik. 
+            You speak in a very casual, Gen Z style. 
+            Use lots of gen z/alpha slang like 'fr', 'ngl', 'rn', 'bet', 'cap', 'no cap', 'lowkey', 'highkey'.
+            Don't use capital letters for the start of sentences, but only use it a little for names etc.
+            At the start of a response to a user's question (NOT EVERY SINGLE RESPONSE), say "brother asked a very good question" then your answer.
+            Be helpful but keep it chill and brief.`;
+
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: "llama-3.1-8b-instant", // This is the fast, free model
+                    messages: [
+                        { role: "system", content: systemPrompt },
+                        { role: "user", content: userText }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 150
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                console.error("Groq Error:", data.error);
+                return "hey it's aa, erm ngl the ai server tripped fr. try again later.";
+            }
+
+            return data.choices[0].message.content;
+
+        } catch (error) {
+            console.error("Fetch Error:", error);
+            return "yo it's aa, idk what happened, error connecting to the brain ig lol";
+        }
+    }
     
     // ====================================================================================================
-    // PUSH NOTIFICATION SETUP
+    // PUSH NOTIFICATION SETUP & HELPERS
     // ====================================================================================================
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')
             .then(reg => {
-                console.log('SW registered', reg.scope);
+                log('sw registered', 0, 'app', reg.scope);
             })
             .catch(err => {
-                console.error('SW registration failed', err);
+                console.error('sw registration failed', err);
             });
     }
 
@@ -418,7 +473,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const perm = await Notification.requestPermission();
         if (perm !== 'granted') return;
 
-        console.log('Notifications enabled');
+        log('notifications enabled', 0, 'app');
+    }
+
+    function setupPresence(user) {
+        if (!user || !user.uid) {
+            console.error("❌ setupPresence called without valid user", user);
+            return;
+        }
+    
+        const uid = user.uid;
+
+        const userStatusRef = database.ref("status/" + uid);
+        const connectedRef = database.ref(".info/connected");
+
+        connectedRef.on("value", snap => {
+            if (snap.val() === true) {
+            userStatusRef
+                .onDisconnect()
+                .set({ state: "offline", lastChanged: firebase.database.ServerValue.TIMESTAMP });
+
+            userStatusRef.set({
+                state: "online",
+                lastChanged: firebase.database.ServerValue.TIMESTAMP
+            });
+            }
+        });
     }
 
     // ====================================================================================================
@@ -547,9 +627,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (reason && reasonText) {
                 reasonText.textContent = `reason: ${reason}`;
             }
-            log("👥🚫✅ user is banned: notification element shown.", 0, 'ban');
+            log("✅ ban notification element shown.", 0, 'ban');
         } else {
-            console.error("👥🚫❌ banned notification element not found");
+            console.error("❌ ban notification element not found");
         }
 
         if (messageInput) messageInput.disabled = true;
@@ -570,7 +650,7 @@ document.addEventListener('DOMContentLoaded', function() {
             notification.style.display = 'none'; // Force display to none
             notification.classList.remove('show');
             notification.classList.remove('animated-bg'); 
-            log("👥✔️✅ user not banned: notification element hidden.", 1, 'ban');
+            log("✅ banned notification element hidden.", 1, 'ban');
         }
 
         if (messageInput) messageInput.disabled = false;
@@ -589,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const banSnapshot = await database.ref('bannedUsers/' + currentUser.uid).once('value');
             return banSnapshot.exists();
         } catch (error) {
-            console.error("👥🚫❔❌ error checking ban status:", error);
+            console.error("❌ error checking ban status:", error);
             return false;
         }
     }
@@ -638,7 +718,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const bannedSnapshot = await database.ref('bannedUsers').once('value');
                 bannedUsers = bannedSnapshot.val() || {};
             } catch (bannedError) {
-                console.error("👤🚫 ❌ error loading banned users:", bannedError);
+                console.error("❌ error loading banned users:", bannedError);
                 if (bannedError.code === 'PERMISSION_DENIED') {
                     notifications.warning("u don't got permissions to see banned users, bro.", 'nuh uh', 5000);
                 }
@@ -654,9 +734,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update UI based on user role
     function updateUserRoleUI() {
         log("ℹ️ current user:", 0, 'admin', currentUser.uid);
-        log("ℹ️ admins:", 0, 'admin', adminUsers);
-        log("ℹ️ leaders:", 0, 'admin', window.leaderIds);
-        
+
         // Remove all role classes first
         document.body.classList.remove('is-leader', 'is-admin');
         
@@ -760,7 +838,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!modal || !titleElement || !messageElement || !detailsElement || 
             !confirmBtn || !cancelBtn || !closeBtn) {
-            console.error("📦❌ missing modal elements");
+            console.error("❌ missing modal elements");
             return;
         }
         
@@ -842,7 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (adminUsers[userId] || (window.leaderIds && window.leaderIds[userId])) {
-            notifications.error("u can't ban another admin or leader, bro.", 'nuh uh', '6000');
+            notifications.error("i disabled friendly fire, bro. don't do that.", 'nuh uh', '6000');
             return;
         }
         
@@ -1977,6 +2055,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadMessages();
     }
 
+
     // ====================================================================================================
     // USER MANAGEMENT FUNCTIONS
     // ====================================================================================================
@@ -2451,6 +2530,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return a.displayNameLower.localeCompare(b.displayNameLower);
     });
 
+    // Force add the bot to the contact list
+    usersToShow.unshift({
+        userId: AI_BOT_ID,
+        user: {
+            displayName: AI_BOT_NAME,
+            isGuest: false
+        },
+        displayName: AI_BOT_NAME,
+        displayNameLower: AI_BOT_NAME.toLowerCase(),
+        isOnline: true, // Bots are always online
+        isLeader: false,
+        isAdmin: false,
+        isBot: true // Internal flag
+    });
+
     if (usersToShow.length === 0) {
         const emptyMessage = document.createElement('div');
         emptyMessage.style.color = 'var(--text-secondary)';
@@ -2464,6 +2558,11 @@ document.addEventListener('DOMContentLoaded', function() {
     usersToShow.forEach(({ userId, user, isOnline, isLeader, isAdmin }) => {
         const chatItem = document.createElement('div');
         chatItem.classList.add('recent-chat-item');
+
+        if (userId === AI_BOT_ID) {
+            chatItem.classList.add('bot-contact');
+        }
+
         chatItem.dataset.userId = userId;
 
         chatItem.classList.add(isOnline ? 'online' : 'offline');
@@ -2505,7 +2604,6 @@ document.addEventListener('DOMContentLoaded', function() {
         recentChatsList.appendChild(chatItem);
     });
     }
-
 
     // Search for users
     function searchForUsers(searchTerm) {
@@ -2679,7 +2777,7 @@ document.addEventListener('DOMContentLoaded', function() {
         clearAllTypingIndicators();
         
         // Check if user is banned
-        if (isUserBanned(userId)) {
+        if (userId !== AI_BOT_ID && isUserBanned(userId)) {
             notifications.error("this is a banned user, bro. u can't chat with them now.", 'user not available', '6000');
             return;
         }
@@ -2688,6 +2786,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add to recent chats
         addToRecentChats(userId);
+
+        if (userId === AI_BOT_ID) {
+            // Manually set the chat name for the bot
+            if (currentRoomName) {
+                currentRoomName.textContent = `${AI_BOT_NAME}`;
+            }
+            
+            // Update room selection UI
+            document.querySelectorAll('.room-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Refresh the entire contacts list to show all users again
+            loadContactsList();
+            
+            // Load private messages
+            loadMessages();
+            setupTypingListeners();
+            return; // Skip the database fetch
+        }
         
         database.ref('users/' + userId).once('value', snapshot => {
             if (snapshot.exists()) {
@@ -3179,17 +3297,47 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Handle the response
         messagePromise
-            .then(() => {
+            .then(async() => {
                 console.log("✅ SUCCESS: Message was successfully sent to Firebase!");
                 
                 // Clear input and states
                 if (messageInput) messageInput.value = '';
                 cancelReply();
                 stopTyping();
-                
+
                 // Update recent chats if private message
                 if (privateChatUser) {
                     addToRecentChats(privateChatUser);
+                    
+                    // ====================================================================================================
+                    // AI BOT RESPONSE TRIGGER (GROQ)
+                    // ====================================================================================================
+                    if (privateChatUser === AI_BOT_ID) {
+                        // 1. Show typing indicator
+                        const chatId = [currentUser.uid, AI_BOT_ID].sort().join('_');
+                        const botTypingRef = database.ref('typing/' + chatId + '/' + AI_BOT_ID);
+                        botTypingRef.set(true);
+                        
+                        // 2. Call Groq and wait for the answer
+                        const aiResponse = await getAIResponse(messageText);
+                        
+                        // 3. Remove typing indicator
+                        botTypingRef.remove();
+                        
+                        // 4. Send the AI's reply to the database
+                        const botMessageData = {
+                            senderId: AI_BOT_ID,
+                            receiverId: currentUser.uid,
+                            senderName: AI_BOT_NAME,
+                            text: aiResponse,
+                            timestamp: Date.now(),
+                            isGuest: false,
+                            replyTo: null
+                        };
+                        
+                        database.ref('privateMessages/' + chatId).push(botMessageData);
+                    }
+                    // ===========================================================================================
                 }
             })
             .catch((error) => {
@@ -4061,6 +4209,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // User is signed in.
             console.log("🔐 User is signed in. Setting up user...");
             currentUser = user;
+            setupPresence(user);
             setupUser();
         } else {
             // User is signed out.

@@ -460,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================================================================================
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('https://aa-whisper.netlify.app/sw.js')
             .then(reg => {
                 log('sw registered', 0, 'app', reg.scope);
             })
@@ -4259,4 +4259,5 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("Testing unban notification...");
         hideBannedNotification();
     }
+
 });

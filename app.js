@@ -460,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================================================================================
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('https://aa-whisper.netlify.app/sw.js')
+        navigator.serviceWorker.register('/whisper/sw.js')
             .then(reg => {
                 log('sw registered', 0, 'app', reg.scope);
             })
@@ -4261,3 +4261,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+

@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================================================================================
     const AI_BOT_ID = 'zakir_bot_v1';
     const AI_BOT_NAME = 'dr zakir naik'; 
-    const GROQ_API_KEY = GROQ_API_KEY;
+    // const GROQ_API_KEY = GROQ_API_KEY;
 
     async function getAIResponse(userText) {
         try {
@@ -4259,6 +4259,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
 
 
 

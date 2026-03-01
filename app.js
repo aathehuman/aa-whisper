@@ -412,8 +412,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const AI_BOT_ID = 'zakir_bot_v1';
     const AI_BOT_NAME = 'dr zakir naik'; 
 
-    const GROQ_API_KEY = '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'; 
-
     async function getAIResponse(userText) {
         try {
             const systemPrompt = `You are a helpful AI named Dr. Zakir Naik. 
@@ -444,14 +442,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (data.error) {
                 console.error("Groq Error:", data.error);
-                return "hey it's aa, erm ngl the ai server tripped fr. try again later.";
+                return "hey it's aa, erm smth happened so just tell chatgpt to act like dr zakir naik enit";
             }
 
             return data.choices[0].message.content;
 
         } catch (error) {
             console.error("Fetch Error:", error);
-            return "yo it's aa, idk what happened, error connecting to the brain ig lol";
+            return "yo it's aa, idk what happened, error connecting to the brain ig";
         }
     }
     
@@ -460,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================================================================================
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/whisper/sw.js')
+        navigator.serviceWorker.register('sw.js')
             .then(reg => {
                 log('sw registered', 0, 'app', reg.scope);
             })
@@ -4261,4 +4259,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
 

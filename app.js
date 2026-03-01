@@ -411,15 +411,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // ====================================================================================================
     const AI_BOT_ID = 'zakir_bot_v1';
     const AI_BOT_NAME = 'dr zakir naik'; 
+    const GROQ_API_KEY = GROQ_API_KEY;
 
     async function getAIResponse(userText) {
         try {
             const systemPrompt = `You are a helpful AI named Dr. Zakir Naik. 
             You speak in a very casual, Gen Z style. 
-            Use lots of gen z/alpha slang like 'fr', 'ngl', 'rn', 'bet', 'cap', 'no cap', 'lowkey', 'highkey'.
             Don't use capital letters for the start of sentences, but only use it a little for names etc.
             At the start of a response to a user's question (NOT EVERY SINGLE RESPONSE), say "brother asked a very good question" then your answer.
-            Be helpful but keep it chill and brief.`;
+            Be helpful but keep it brief.`;
 
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
@@ -4259,5 +4259,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
 
 
